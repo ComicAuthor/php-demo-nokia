@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+    <script src="js/jquery-3.3.1.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/css/swiper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/js/swiper.min.js"></script>
+    <link rel="stylesheet" href="css/head.css">
+</head>
+
+<body>
+    <div id="head"></div>
+    <div id="nav_left"></div>
+
+    <div id="cont">
+        <!-- 轮播图 -->
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide"><img src="img/1da54c431dc347a5a951e36037b8a842.jpg" alt=""></div>
+                <div class="swiper-slide"><img src="img/2232c08e884541a48afef7a76f520063.jpg" alt=""></div>
+
+                <div class="swiper-slide"><img src="img/50e4f3ba6a5b403da1f0f498ada7239f.jpg" alt=""></div>
+                <div class="swiper-slide"><img src="img/77a4d71010304e868af09e0f5c7a1e78.jpg" alt=""></div>
+                <div class="swiper-slide"><img src="img/87cf328eb6454221a639cf296662cb1d.jpg" alt=""></div>
+                <div class="swiper-slide"><img src="img/f0d70f988e5144beae26159975ac49f9.jpg" alt=""></div>
+            </div>
+
+            <!-- 如果需要导航按钮 -->
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+
+            <!-- 如果需要滚动条 -->
+            <div class="swiper-scrollbar"></div>
+        </div>
+
+        <!-- 中间 -->
+        <div class="cent mt-3">
+            <img src="img/afd9e6a645344013a92e5c2e686777cc.jpg" alt="" width="370" style="vertical-align: top">
+            <div class="all_group">
+            </div>
+        </div>
+        <!-- 下面 -->
+        <div class="row ml-5 mt-3 pb-5 text-center" style="min-width: 1150px" id="bottombox">
+
+        </div>
+    </div>
+    <div id="footer"></div>
+
+
+    <script>
+        var mySwiper = new Swiper('.swiper-container', {
+            direction: 'horizontal',
+            loop: true,
+            autoplay: true,
+            // 如果需要前进后退按钮
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+
+            // 如果需要滚动条
+            scrollbar: {
+                el: '.swiper-scrollbar',
+            },
+        })
+
+        $('#footer').load('footer.html');
+        $("#head").load('head.html');
+        $("#nav_left").load('nav.html');
+
+
+
+        var contarr = [],
+            bottomarr = [],
+            index = 0,
+            newarr = [];
+        $.ajax({
+            type: 'post',
+            url: './../index.php',
+            data: {
+                c: 'Product',
+                a: 'selectAllProduct',
+            },
+            success: show
+        })
+
+        function show(e) {
+            var res = JSON.parse(e);
+            for (i in res) {
+                if (res[i]['goods_state'] == 0) {
+                    index++;
+                } else {
+                    newarr.push(res[i]);
+                }
+            }
+            conthtml = '';
+            bottomhtml = '';
+            contarr = getrandomArr(0, res.length - index, 4);
+            bottomarr = getrandomArr(0, res.length - index, 3);
+            for (i in contarr) {
+                if (contarr[i] == newarr.length) {
+                    num = contarr[i] - 1;
+                } else {
+                    num = contarr[i];
+                }
+                conthtml += '<div class="group text-center ml-2 mr-2 mb-2 mt-2" name="' + newarr[num]['id'] +
+                    '" onclick="make(this)"><div class="concent"style="height: 50px;"></div><img src="./../uploads/' +
+                    newarr[num][
+                        'img'
+                    ] + '"alt=""width="250"><h4 style="font-size: 1.3rem">' + newarr[num]['goods_name'] +
+                    '</h4><span style="color:gray">' + newarr[num]['goods_present'].split('/')[0] +
+                    '</span><br><span style="font-size: 1.2rem">￥</span><span style="font-size: 1.2rem">' + parseInt(
+                        newarr[num]['goods_price']).toFixed(2) +
+                    '</span><span style="font-size: 1.2rem">起</span></div>';
+            }
+            $('.all_group').html(conthtml);
+            for (i in bottomarr) {
+                if (bottomarr[i] == res.length) {
+                    num = bottomarr[i] - 1;
+                } else {
+                    num = bottomarr[i];
+                }
+                bottomhtml += '<div class="col col-3 ml-3 mr-3 group text-center" name="' + newarr[num]['id'] +
+                    '" onclick="make(this)"><div class="concent"style="height: 50px;"></div><img src="./../uploads/' +
+                    newarr[num][
+                        'img'
+                    ] + '"alt=""width="250"><h4 style="font-size: 1.3rem">' + newarr[num]['goods_name'] +
+                    '</h4><span style="color:gray">' + newarr[num]['goods_present'].split('/')[0] +
+                    '</span><br><span style="font-size: 1.2rem">￥</span><span style="font-size: 1.2rem">' + parseInt(
+                        newarr[num]['goods_price']).toFixed(2) +
+                    '</span><span style="font-size: 1.2rem">起</span></div>';
+            }
+            $('#bottombox').html(bottomhtml);
+
+        }
+
+
+        function make(box) {
+            var id = box.getAttribute('name');
+            location.href = './product.html?product=' + id + '';
+        }
+
+
+        function getRandom(min, max) {
+            return Math.round(Math.random() * (max - min) + min);
+        }
+
+        function getrandomArr(min, max, num) {
+            var arr = [];
+            while (arr.length < num) {
+                var n = getRandom(min, max);
+                if (arr.indexOf(n) == -1) {
+                    arr.push(n);
+                }
+            }
+            return arr;
+        }
+
+        // 获取cookie 的方法
+        function getcookie(Name) {
+            var search = Name + "=" //查询检索的值
+            var returnvalue = ""; //返回值
+            if (document.cookie.length > 0) {
+                sd = document.cookie.indexOf(search);
+                if (sd != -1) {
+                    sd += search.length;
+                    end = document.cookie.indexOf(";", sd);
+                    if (end == -1)
+                        end = document.cookie.length;
+                    //unescape() 函数可对通过 escape() 编码的字符串进行解码。
+                    returnvalue = unescape(document.cookie.substring(sd, end))
+                }
+            }
+            return returnvalue;
+        }
+    </script>
+</body>
+
+</html>

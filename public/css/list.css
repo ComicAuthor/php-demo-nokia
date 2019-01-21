@@ -1,0 +1,16 @@
+.group {
+	width: 43%;
+	height: 400px;
+	display: inline-block;
+	transition: .5s;
+	vertical-align: top;
+	background: white;
+}
+.huo{
+	transition: .5s;
+	background: white;
+}
+
+.group:hover,.huo:hover {
+	box-shadow: 5px 6px 14px grey;
+}

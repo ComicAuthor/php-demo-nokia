@@ -1,0 +1,220 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <title>产品分类</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="style/adminStyle.css" rel="stylesheet" type="text/css" />
+  <!-- <script src="http://apps.bdimg.com/libs/jquery/1.9.1/jquery.min.js"></script> -->
+  <script src="js/jquery.js"></script>
+  <style>
+    .fu1 {
+      background: gainsboro;
+      height: 100px;
+      text-align: center;
+      padding-top: 50px;
+    }
+
+    .fu1 span {
+      font-size: 24px;
+      margin: 0px 10px;
+    }
+
+    .fu1 span:hover {
+      background: black;
+      color: white;
+      cursor: pointer;
+    }
+
+    .fu2 {
+      background: gainsboro;
+      height: 150px;
+      text-align: center;
+      padding-top: 50px;
+    }
+
+    .fu2 span {
+      display: inline-block;
+      padding: 10px;
+      border: 1px solid black;
+      margin: 0 10px;
+    }
+
+    .fu2 span:hover {
+      background: black;
+      color: white;
+      cursor: pointer;
+    }
+
+    .fu3 {
+      background: gainsboro;
+      height: 200px;
+      text-align: left;
+      padding-top: 20px;
+    }
+
+    .fu3_1 {
+      display: inline-block;
+      text-align: center;
+      vertical-align: top;
+    }
+
+    .fu3_1 .p1 {
+      padding: 10px;
+      border: 1px solid black;
+      margin: 0 10px;
+    }
+
+    .fu3_1:hover .p2 {
+      display: block;
+    }
+
+    .fu3_1 .p2 {
+      cursor: pointer;
+      display: none;
+      font-weight: 500;
+      margin: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="page-title">
+      <span class="modular fl"><i></i><em>产品分类</em></span>
+      <span class="modular fr"><a href="add_category.html" class="pt-link-btn">+添加新分类</a></span>
+    </div>
+
+    <!-- <table id="table" class="list-style text-center"></table> -->
+
+    <p>顶级分类</p>
+    <div id="fu1" class="fu1"></div>
+    <p>二级分类</p>
+    <div id="fu2" class="fu2"></div>
+    <p>三级分类</p>
+    <div id="fu3" class="fu3">
+    </div>
+  </div>
+</body>
+<script>
+  $(document).ready(function () {
+
+    var data = '';
+    $.ajax({
+      type: 'post',
+      url: './../index.php',
+      data: {
+        c: 'Product',
+        a: 'getAll',
+      },
+      success: show
+    })
+    var html1 = '';
+    var html2 = '';
+    var html3 = '';
+    var html4 = '';
+    var id_;
+
+    function show(e) {
+      data = JSON.parse(e)
+      // debugger
+      for (var i = 0; i < data.length; i++) {
+        if (data[i].type_fid == 0) {
+          html1 += '<span class="ding" name="' + data[i].id + '">' + data[i].type_name + '</span>'
+        }
+      }
+      $('#fu1').html(html1);
+
+      let ding = document.getElementsByClassName('ding');
+      for (let i = 0; i < ding.length; i++) {
+        ding[i].onclick = function () {
+          var id = this.getAttribute('name');
+          for (var k = 0; k < data.length; k++) {
+            if (data[k].type_fid == id) {
+              html2 += '<span class="er" name="' + data[k].id + '">' + data[k].type_name + '</span>'
+            }
+          }
+          $('#fu2')[0].innerHTML = ''
+          $('#fu3').html('')
+          $('#fu2').html(html2);
+          html2 = '';
+          let er = document.getElementsByClassName('er');
+          for (let i = 0; i < er.length; i++) {
+            er[i].onclick = function () {
+              // debugger
+              id_ = this.getAttribute('name');
+              for (var k = 0; k < data.length; k++) {
+                if (data[k].type_fid == id_) {
+                  html3 += '<div class="fu3_1 kk_' + data[k].id + '"><p class="p1">' + data[k].type_name +
+                    '</p><p class="p2" name="' +
+                    data[k].id + '">删除</p></div>'
+                }
+              }
+              $('#fu3')[0].innerHTML = ''
+              $('#fu3').html(html3);
+      
+              html3 = '';
+
+              let p1 = document.getElementsByClassName('p2');
+              for (let i = 0; i < p1.length; i++) {
+                p1[i].onclick = function () {
+                  var id = this.getAttribute('name');
+                  $.ajax({
+                    type: "post",
+                    url: "./../../index.php",
+                    data: {
+                      c: 'Product',
+                      a: 'delete',
+                      id: id,
+                    },
+                    success: show2
+
+                  })
+
+                }
+              }
+            }
+          }
+        }
+
+        function show2(e) {
+          var res = JSON.parse(e)
+          for (var i = 0; i < res.length; i++) {
+            if (data[i].type_fid == id_) {
+              html3 += '<div class="fu3_1 kk_' + data[i].id + '"><p class="p1">' + data[i].type_name +
+                '</p><p class="p2" name="' +
+                data[i].id + '">删除</p></div>'
+            }
+          }
+          $('#fu3')[0].innerHTML = ''
+          $('#fu3').html(html3);
+          html3 = '';
+          let p1 = document.getElementsByClassName('p2');
+          console.log(p1);
+          for (let i = 0; i < p1.length; i++) {
+            p1[i].onclick = function () {
+              var id = this.getAttribute('name');
+              console.log(id);
+              $.ajax({
+                type: "post",
+                url: "./../../index.php",
+                data: {
+                  c: 'Product',
+                  a: 'delete',
+                  id: id,
+                },
+                success: show2
+
+              })
+
+            }
+          }
+        }
+
+      }
+
+    }
+  })
+</script>
+
+</html>

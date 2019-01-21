@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <link rel="stylesheet" href="css/bootstrap.min.css" />
+  <title>Document</title>
+  <script src="js/jquery-3.3.1.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+</head>
+
+<body>
+  <div id="head"></div>
+  <div id="nav_left"></div>
+
+  <div class="all pt-2 pb-3" style="background: rgb(245,245,245);">
+    <div id="cont" class="mt-5 mb-5 pt-3 pb-3" style="margin:0 auto; min-width:1250px; width: 1300px; background:white;">
+      <div class="container">
+        <div class="row">
+          <div class="col col-2"><img src="img/over.png" /></div>
+          <div class="col col-6">
+            <div class="row">
+              <div class="col-12">
+                <h3 style="color: salmon">订单提交成功！快去付款吧！</h3>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12" id="orderid" style="font-size: 1.2rem;font-weight: bolder">订单编号</div>
+            </div>
+            <div class="row">
+              <div class="col-12" id="adds" style="font-size: 0.9rem;font-weight: bold">收货地址</div>
+            </div>
+          </div>
+          <div class="col col-2 mt-4">
+            <h4>应付总额：</h4>
+          </div>
+          <div class="col col-2 mt-4">
+            <h3 id="all">￥1099.00</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="" class=" pt-3 pb-3 mb-5" style="margin:0 auto; min-width:1250px; width: 1300px; background:white;">
+      <div class="container">
+        <div class="row border-bottom">
+          <h4>支付方式</h4>
+        </div>
+        <div class="row mt-5 mb-5">
+          <div class="col col-4 text-center border-danger">
+            <h4 class="pt-2 pb-2"><img src="./img/icon_alipay@2x.png" alt=""></h4>
+          </div>
+          <div class="col col-4 text-center">
+            <h4><img src="./img/icon_wechat@2x.png" alt=""></h4>
+          </div>
+          <div class="col col-4 text-center">
+            <h4><img src="./img/icon_onlinepayment@2x.png" alt=""></h4>
+          </div>
+        </div>
+        <div class="row mt-5 mb-5">
+          <div class="col text-center">
+            <button type="button" class="btn btn-success" id="btn">
+              确认支付
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer"></div>
+  <script type="text/javascript">
+    var html='';
+    $("#head").load("head.html");
+    $("#nav_left").load("nav.html");
+    $("#footer").load("footer.html");
+    window.onload = function () {
+      var state = getcookie('PHPSESSID');
+      var data = location.href.split("?")[1];
+      var all = data.split("&")[0].split('=')[1];
+      var adds = data.split("&")[1].split('=')[1];
+      var num = data.split("&")[2].split('=')[1];
+      $("#all").html(all);
+      if (adds) {
+        $.ajax({
+          type: 'post',
+          url: './../index.php',
+          data: {
+            c: 'Address',
+            a: 'getone',
+            cool:state,
+            adds:adds,
+          },
+          success:function(e){
+            var res=JSON.parse(e)[0];
+            html= `收货人:${res['people']}&nbsp${res['phone']},&nbsp&nbsp;<br>收货地址:${res['province']}&nbsp${res['county']}&nbsp${res['city']}&nbsp${res['full']}`;
+            $('#adds').html(html);
+          }
+        })
+      }
+      $('#orderid').html('订单编号'+num);
+    };
+    $("#btn").on("click", function () {
+      alert("购买成功！");
+      location.href = "./index.html";
+    });
+
+
+    // 获取cookie 的方法
+    function getcookie(Name) {
+      var search = Name + "="; //查询检索的值
+      var returnvalue = ""; //返回值
+      if (document.cookie.length > 0) {
+        sd = document.cookie.indexOf(search);
+        if (sd != -1) {
+          sd += search.length;
+          end = document.cookie.indexOf(";", sd);
+          if (end == -1) end = document.cookie.length;
+          //unescape() 函数可对通过 escape() 编码的字符串进行解码。
+          returnvalue = unescape(document.cookie.substring(sd, end));
+        }
+      }
+      return returnvalue;
+    }
+  </script>
+</body>
+
+</html>

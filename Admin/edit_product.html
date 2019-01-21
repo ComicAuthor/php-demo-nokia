@@ -1,0 +1,207 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <title>产品列表</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="style/adminStyle.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="style/bootstrap.min.css">
+  <script src="js/jquery.js"></script>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="page-title">
+      <span class="modular fl"><i class="add"></i><em>编辑/添加产品</em></span>
+      <span class="modular fr"><a href="product_list.html" class="pt-link-btn">产品列表</a></span>
+    </div>
+    <table class="list-style">
+      <tr>
+        <td style="text-align:right;width:15%;">产品名称：</td>
+        <td><input type="text" class="textBox length-long" id="name" /></td>
+      </tr>
+      <tr>
+        <td style="text-align:right;">商品类型:</td>
+        <td>
+          <select id="ftype">
+          </select>
+          <select id="ctype"></select>
+        </td>
+      </tr>
+      <tr>
+        <td style="text-align:right;">销售价格:</td>
+        <td>
+          <input type="text" class="textBox length-short" id="price" />
+          <span>元</span>
+        </td>
+      </tr>
+      <tr>
+        <td style="text-align:right;">成本价格:</td>
+        <td>
+          <input type="text" class="textBox length-short" id="costprice" />
+          <span>元</span>
+        </td>
+      </tr>
+      <tr>
+        <td style="text-align:right;">库存：</td>
+        <td>
+          <input type="text" class="textBox length-short" id="stock" />
+          <span>件</span>
+        </td>
+      </tr>
+      <tr>
+        <td style="text-align:right;">商品规格：</td>
+        <td>颜色<input type="text" id="color">
+          版本<input type="text" id="gui">
+        </td>
+      </tr>
+      <tr>
+        <td style="text-align:right;">商品编号：</td>
+        <td><input type="text" class="textBox length-long" id="num" /></td>
+      </tr>
+      <tr>
+        <td style="text-align:right;">产品描述：</td>
+        <td><input type="text" class="textBox length-long" id="present" /></td>
+      </tr>
+      <tr>
+        <td style="text-align:right;">状态</td>
+        <td>
+          <select id="state">
+            <option value="1">上架</option>
+            <option value="0">存库</option>
+          </select>
+        </td>
+      </tr>
+
+      <tr>
+        <td style="text-align:right;">产品图片：</td>
+        <td>
+          <input type="file" id="img" class="hide" multiple />
+          <label for="img" class="labelBtnAdd">+</label>
+          <div id="cont"></div>
+        </td>
+      </tr>
+
+      <tr>
+        <td style="text-align:right;">产品详情：</td>
+        <td>
+          <div id="demo">
+
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td style="text-align:right;"></td>
+        <td><input type="button" value="发布新商品" class="btn btn-success" id="Btn" /></td>
+      </tr>
+    </table>
+  </div>
+  <script>
+
+    alltype = [];
+    typeid = '';
+    lastid = '';
+    $(document).ready(function () {
+      $('#demo').load('./../Admin/demoindex.html');
+      $.ajax({
+        type: 'post',
+        url: './../index.php',
+        data: {
+          c: 'Product',
+          a: 'getAll',
+        },
+        success: show,
+      });
+    });
+
+    function show(e) {
+      var res = JSON.parse(e);
+      alltype = res;
+      // 准备分类的选项框
+      for (i in alltype) {
+        if (alltype[i]['type_fid'] == 0) {
+          $('#ftype').append('<option value="' + alltype[i]['id'] + '">' + alltype[i]['type_name'] + '</option>');
+        }
+      }
+
+      $('#ftype').on('blur', function () {
+        for (i in alltype) {
+          if (alltype[i]['type_fid'] == $('#ftype').val()) {
+            $('#ctype').append('<option value="' + alltype[i]['id'] + '">' + alltype[i]['type_name'] +
+              '</option>');
+          }
+        }
+      })
+
+      $('#ctype').on('blur', function () {
+        typeid = $('#ctype').val();
+      })
+
+    }
+
+    $('#img').on('change', function () {
+      var file_obj = document.getElementById('img').files;
+      var fd = new FormData();
+      for (var i = 0; i < file_obj.length; i++) {
+        fd.append('file', file_obj[i]);
+        $.ajax({
+          type: 'post',
+          url: './../uploads/uploads.php',
+          data: fd,
+          processData: false,
+          contentType: false,
+          success: function (e) {
+            var resobj = JSON.parse(e);
+            var img = document.createElement('img');
+            img.src = resobj['url'];
+            img.name = resobj['name'];
+            img.className='mlr5 allimgs';
+            img.style.width='80px';
+            img.style.height='80px';
+            $('#cont').append(img);
+          }
+        })
+      }
+    })
+    var iname=''
+    // 上传新商品
+    $('#Btn').on('click', function () {
+      var imgs=document.getElementsByClassName('allimgs');
+      for(var i=0;i<imgs.length;i++){
+        iname+=imgs[i].getAttribute('name')+",";
+      }
+      iname=iname.slice(0,iname.length-1);
+      var str = getAllHtml();
+      var dataobj = {
+        'goods_name': $('#name').val(),
+        'goods_price': $('#price').val(),
+        'goods_cost_price': $('#costprice').val(),
+        'goods_stock': $('#stock').val(),
+        'goods_spec': $('#color').val() + ',' + $('#gui').val(),
+        'goods_num': $('#num').val(),
+        'goods_present': $('#present').val(),
+        'goods_state': $('#state').val(),
+        'goods_type': typeid,
+        'img': iname,
+        'goods_detail': str,
+      };
+      $.ajax({
+        type: 'post',
+        url: './../index.php',
+        data: {
+          c: 'Product',
+          a: 'addPro',
+          list: [dataobj],
+        },
+        success: function (e) {
+          var res = JSON.parse(e);
+          if (res) {
+            alert('添加商品成功');
+          }
+        }
+      })
+    })
+  </script>
+</body>
+
+</html>

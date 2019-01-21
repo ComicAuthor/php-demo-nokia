@@ -1,0 +1,48 @@
+button{
+    width: 150px;
+}
+
+
+.img_box {
+    width: 400px;
+    height: 400px;
+    position: relative;
+
+}
+
+.mask {
+    width: 200px;
+    height: 200px;
+    background-color: rgba(150, 150, 160, 0.3);
+    position: absolute;
+    left: 30px;
+    top: 0;
+    display: none;
+    z-index: 5;
+}
+
+.img_box>img {
+    width: 400px;
+    height: 400px;
+    vertical-align: top;
+}
+
+.img_box1 {
+    width: 500px;
+    height: 500px;
+    /* border: 1px solid black; */
+    position: absolute;
+    left: 600px;
+    top: 120px;
+    overflow: hidden;
+    display: none;
+}
+
+.img_box1>img {
+    width: 900px;
+    height: 900px;
+    vertical-align: top;
+    position: relative;
+    top: 0;
+    left: 0;
+}

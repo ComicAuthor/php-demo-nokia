@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>侧导航</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+    <script src="js/jquery-3.3.1.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="css/nav.css">
+</head>
+
+<body>
+    <div class="nav_nav">
+        <div class="nav_left">
+            <div class="nav_one">
+                <img src="img/geren.png" alt="" width="31">
+            </div>
+            <div class="nav_one">
+                <img src="img/kefu.png" alt="" width="31">
+            </div>
+            <div class="nav_one">
+                <img src="img/car1.png" alt="" width="31">
+            </div>
+            <div class="nav_one">
+                <img src="img/home.png" alt="" width="31">
+            </div>
+            <div id="nav_top">
+                <img src="img/shang.png" alt="" width="31">
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            // 编写jQuery返回顶部插件
+            jQuery.fn.goToTop = function () {
+
+                // 判断如果窗口滚动距离小于0，隐藏按钮
+                if ($(window).scrollTop() < 0) {
+                    $('#nav_top').hide();
+                }
+
+                // 窗口滚动时，判断当前窗口滚动距离
+                $(window).scroll(function () {
+                    if ($(this).scrollTop() > 1) {
+                        $('#nav_top').fadeIn();
+                    } else {
+                        $('#nav_top').fadeOut();
+                    }
+                });
+
+                // 给这个按钮绑定一个click事件
+                this.bind('click', function () {
+                    $('html ,body').animate({
+                        scrollTop: 0
+                    }, 500);
+                    return false;
+                });
+            };
+
+            //调用这个插件
+            $(function () {
+                $('#nav_top').goToTop();
+            });
+        })
+    </script>
+</body>
+
+</html>

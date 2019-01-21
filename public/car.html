@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>购物车</title>
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+  <script src="js/jquery-3.3.1.js" type="text/javascript" charset="utf-8"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <style>
+    #sub,
+    #add {
+      display: inline-block;
+      font-size: 1.6rem;
+      width: 30px;
+      height: 30px;
+      text-align: center;
+      line-height: 30px;
+      background: rgb(245, 245, 245);
+      border-radius: 50%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="head"></div>
+  <div id="nav_left"></div>
+  <div class="container-fluid pl-5 pr-5 mt-5" id="cont"></div>
+  <div id="footer"></div>
+  <script>
+    $("#footer").load("footer.html");
+    $("#head").load("./head.html");
+    $("#nav_left").load("nav.html");
+
+    var state = getcookie("PHPSESSID");
+    var html = "";
+    if (state == "") {
+      html =
+        '<div class="row pl-5 pr-5 text-center" style="height: 300px;line-height: 300px;background: rgb(245,245,245)"><div class="col" style="font-size: 2rem;">请您先登录！</div></div>';
+      $("#cont").html(html);
+    } else {
+      $.ajax({
+        type: "post",
+        url: "./../index.php",
+        data: {
+          c: "Shop",
+          a: "selectShop",
+          cool: state
+        },
+        success: show
+      });
+    }
+    var list = [];
+    var dataObj = {};
+    var old = [];
+    var all = [];
+
+    function show(e) {
+      $("#cont")[0].innerHTML = "";
+      var allP = 0,
+        allnum = 0;
+      var res = JSON.parse(e);
+      var one =
+        '<div class="row pl-5 pr-5"><div class="col col-12"><div class="row"><div class="col col-12"><p class="h3">购物车</p></div></div><div class="row mt-3 pt-3 bg-light"><div class="col col-1 h5"><input class="mr-2" type="checkbox"  id="topBtn"    /><span>全选</span></div><div class="col h5 col-3"><p>商品信息</p></div><div class="col h5 col-2"><p>单价</p></div><div class="col h5 col-2"><p>数量</p></div><div class="col h5 col-2"><p>小计</p></div><div class="col h5 col-2"><p>操作</p></div></div>';
+      var html = "";
+      var two =
+        '</div><div class="col mt-5 pt-5 col-12" style="border-top: 1px solid gray"><div class="row"><div class="col h4 text-right col-3 offset-5"><p >合计： ￥<span id="all">' +
+        allP +
+        '</span></p></div><div class="col h4 text-center   col-4"><button class="btn h4 btn-danger input-group  btn-outline-danger" id="Btn">立即结算 </button></div></div></div></div>';
+      for (i in res) {
+        html +=
+          '<div class="row mt-1 py-3" id="some"><div class="col col-1 h5"><input class="mr-2 item" type="checkbox" sid="' +
+          res[i]["id"] +
+          '" name="' +
+          res[i]["goods_id"] +
+          '"/></div><div class="col  col-3"><div class="row"><div class="col col-4"><img src="./../uploads/' +
+          res[i]["img"] +
+          '" width="80" height="80" alt="" /></div><div class="col col-8"><p>' +
+          res[i]["goods_name"] +
+          "</p><span>" +
+          res[i]["goods_spec"] +
+          '</span></div></div></div><div class="col h5 pt-4 col-2"><p>' +
+          res[i]["goods_price"] +
+          '</p></div><div class="col h5 pt-4 col-2"><input value="' +
+          res[i]["goods_num"] +
+          '" type="number" class="gnums" style="width:50px" sid="' +
+          res[i]["id"] +
+          '"></div><div class="col h5 pt-4 col-2"><p>' +
+          res[i]["goods_price"] * res[i]["goods_num"] +
+          '</p></div><div class="col h5 pt-4 col-2"><button name="' +
+          res[i]["id"] +
+          '" class="btn btn-info btn-outline-danger del" >删除</button></div></div>';
+      }
+      $("#cont").html(one + html + two);
+      var alldel = document.getElementsByClassName("del");
+      for (var i = 0; i < alldel.length; i++) {
+        alldel[i].onclick = function () {
+          var id = this.getAttribute("name");
+          $.ajax({
+            type: "post",
+            url: "./../index.php",
+            data: {
+              c: "Shop",
+              a: "delOne",
+              sid: id,
+              cool: state
+            },
+            success: show
+          });
+        };
+      }
+      var allgnums = document.getElementsByClassName('gnums');
+      for (var i = 0; i < allgnums.length; i++) {
+        allgnums[i].onchange = function () {
+          if (this.value <= 0) {
+            this.value = 1;
+          }
+          var id = this.getAttribute("sid");
+          $.ajax({
+            type: 'post',
+            url: './../index.php',
+            data: {
+              c: 'Shop',
+              a: 'updatenum',
+              sid: id,
+              cool: state,
+              num: this.value,
+            },
+            success: show
+          })
+
+        }
+      }
+
+      var items = document.getElementsByClassName("item");
+      var topBtn = document.getElementById("topBtn"); //为全选checkbox添加事件
+      topBtn.onchange = function () {
+        for (var i = 0; i < items.length; i++) {
+          var price = parseInt(
+            items[i].parentElement.parentElement.children[2].children[0]
+            .innerText
+          );
+          var num = parseInt(
+            items[i].parentElement.parentElement.children[3].children[0]
+            .value
+          );
+          var allprice = price * num;
+          if (items[i].checked == true) {
+            items[i].checked = this.checked;
+            $("#all").html("");
+            allP -= allprice;
+            $("#all").html(allP);
+          } else {
+            items[i].checked = this.checked;
+            $("#all").html("");
+            allP += allprice;
+            $("#all").html(allP);
+          }
+        }
+      }; //遍历所有的items，绑定onchange事件
+      for (var i = 0; i < items.length; i++) {
+        items[i].onchange = function () {
+          qxFn();
+        };
+        items[i].onclick = function () {
+          // debugger;
+          var price = parseInt(
+            this.parentElement.parentElement.children[2].children[0].innerText
+          );
+          var num = parseInt(
+            this.parentElement.parentElement.children[3].children[0].value
+          );
+          var allprice = price * num;
+          if (this.checked == true) {
+            $("#all").html("");
+            allP += allprice;
+            $("#all").html(allP);
+          } else {
+            $("#all").html("");
+            allP -= allprice;
+            $("#all").html(allP);
+          }
+        };
+      }
+      var qxFn = function () {
+        var count = 0; //定义一个计数变量
+        for (var j = 0; j < items.length; j++) {
+          //遍历items
+          if (items[j].checked == true) {
+            //如果状态为选中，count+1
+            count++;
+          }
+          if (count == items.length) {
+            //如果被选中的个数等于items的长度
+            topBtn.checked = true; //全选checkbox选中
+          } else {
+            topBtn.checked = false;
+            //全选checkbox不选中
+          }
+        }
+      };
+
+      $("#Btn").on("click", function () {
+        var checkFlag = true;
+        for (var i = 0; i < items.length; i++) {
+          if (items[i].checked == true) {
+
+            var oldid = items[i].getAttribute("sid");
+            var id = items[i].getAttribute("name");
+            var spec =
+              items[i].parentElement.parentElement.children[1].children[0]
+              .children[1].children[1].innerText;
+            var num =
+              items[i].parentElement.parentElement.children[3].children[0]
+              .value;
+            var price =
+              items[i].parentElement.parentElement.children[2].children[0]
+              .innerText;
+            var im = items[
+              i
+            ].parentElement.parentElement.children[1].children[0].children[0].children[0].src.split(
+              "/"
+            )[5];
+            var name =
+              items[i].parentElement.parentElement.children[1].children[0]
+              .children[1].children[0].innerText;
+
+            dataObj = {
+              goods_id: id,
+              goods_spec: spec,
+              goods_num: num,
+              goods_price: price,
+              img: im,
+              goods_name: name
+            };
+            list.push(dataObj);
+            old.push(oldid);
+            checkFlag = false;
+            continue;
+          }
+        }
+        all = [list, old];
+        localStorage.setItem("data", JSON.stringify(all));
+        location.href = "./order.html";
+
+        if (checkFlag) {
+          alert('请您先选择商品！')
+        }
+
+      });
+    }
+
+    // 获取cookie 的方法
+    function getcookie(Name) {
+      var search = Name + "="; //查询检索的值
+      var returnvalue = ""; //返回值
+      if (document.cookie.length > 0) {
+        sd = document.cookie.indexOf(search);
+        if (sd != -1) {
+          sd += search.length;
+          end = document.cookie.indexOf(";", sd);
+          if (end == -1) end = document.cookie.length;
+          //unescape() 函数可对通过 escape() 编码的字符串进行解码。
+          returnvalue = unescape(document.cookie.substring(sd, end));
+        }
+      }
+      return returnvalue;
+    }
+  </script>
+</body>
+
+</html>

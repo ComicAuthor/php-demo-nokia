@@ -1,0 +1,25 @@
+.nav_left{
+    z-index: 10;
+    width: 60px;
+    height: 200px;
+    position: fixed;
+    right: 0px;
+    top: 200px;
+    background: rgb(127, 127, 127);
+}
+.nav_one{
+    text-align: center;
+    line-height: 50px;
+    width: 60px;
+    height: 50px;
+}
+
+#nav_top{
+    background: rgb(127, 127, 127);
+    text-align: center;
+    line-height: 50px;
+    width: 60px;
+    margin-top: 25px;
+    height: 60px;
+    display: none;
+}

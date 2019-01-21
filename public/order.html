@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Document</title>
+  <script src="js/jquery-3.3.1.js"></script>
+  <link rel="stylesheet" href="css/bootstrap.min.css" />
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/jsAddress.js"></script>
+</head>
+
+<body>
+  <div id="tou"></div>
+  <div>
+    <div class="container-fluid mt-5 pl-5 pr-5">
+      <div class="row pl-5 pr-5">
+        <div class="col col-8">
+          <div class="row pr-5">
+            <div class="col col-10">
+              <p class="h5">配送地址</p>
+            </div>
+            <div class="col col-2">
+              <p class="btn btn_pp" id="creat">新增配送地址</p>
+            </div>
+          </div>
+          <div class="row pr-5 show1 ">
+            <div class="col col-12">
+              <p style="border: 2px solid black" class="pt-4 pl-2 pb-4" id="address">
+                您还没有收货地址，请添加地址！
+              </p>
+            </div>
+          </div>
+          <div class="modal fade">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <span class="text-dark">添加地址</span>
+                  <p class="close" data-dismiss="modal">&times;</p>
+                </div>
+                <div class="modal-body">
+                  收货人：<input type="text" placeholder="请输入收货人名称" class="form-control mt-2" id="people" />
+                  手机号码：<input type="number" placeholder="请输入收货人手机号" class="form-control mt-2" id="phone" />
+                  选择地区：<br /><select id="cmbProvince" class="mt-2"></select>
+                  <select id="cmbCity"></select>
+                  <select id="cmbArea" class="mb-2"></select><br />
+                  详细地址：<input type="text" placeholder="请输入详细地址" class="form-control mt-2" id="date" />
+                  默认地址：<select id="blank" class="mt-2">
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                  </select>
+                </div>
+                <div class="modal-footer">
+                  <button class="btn btn-outline-success" id="btn">
+                    确定
+                  </button>
+                  <button class="btn btn-outline-success" data-dismiss="modal">
+                    取消
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col col-4 pt-3 bg-light">
+          <div id="cont"></div>
+
+          <div class="row pt-4 pb-4" style="border-bottom: 1px solid gray">
+            <div class="col col-12">
+              <div class="row">
+                <div class="col col-8">
+                  <p class="h4">商品金额：</p>
+                </div>
+                <div class="col col-2" id="allP">
+                  <p>¥1299.00</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col col-8">
+                  <p class="h4">运费:</p>
+                </div>
+                <div class="col col-2">
+                  <p>¥12</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col col-8">
+                  <p class="h4">优惠:</p>
+                </div>
+                <div class="col col-2">
+                  <p>-¥12</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row pt-4">
+            <div class="col col-12">
+              <div class="row">
+                <div class="col col-8">
+                  <p class="h4">总计</p>
+                </div>
+                <div class="col col-2">
+                  <p class="h4" id="allprice">¥1299.00</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row pt-4">
+            <div class="col text-center col-12">
+              <p class="btn btn-danger" id="ok">提交订单并支付</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="jiao"></div>
+</body>
+<script>
+  addressInit("cmbProvince", "cmbCity", "cmbArea");
+  $("#tou").load("head.html");
+  $("#jiao").load("footer.html");
+
+  $("#creat").on("click", function () {
+    $(".modal").modal("show");
+  });
+  var data = null;
+  var all = 0;
+  window.onload = function () {
+    data = JSON.parse(localStorage.getItem("data"));
+    var html = "";
+    for (i in data[0]) {
+      var num = parseInt(data[0][i]["goods_num"]);
+      p = num * parseInt(data[0][i]["goods_price"]);
+      all += p;
+      html +=
+        '<div class="row pt-4 pb-4" style="border-top: 1px solid gray;border-bottom: 1px solid gray"><div class="col col-3"><img src="./../uploads/' +
+        data[0][i]["img"] +
+        '" width="80" height="80" alt="" /></div><div class="col col-7"><p>' +
+        data[0][i]["goods_name"] +
+        "</p><span>" +
+        data[0][i]["goods_spec"] +
+        "</span></div></div>";
+    }
+    $("#cont").html(html);
+    $("#allP").html("￥" + all);
+    $("#allprice").html("￥" + all);
+  };
+  var state = getcookie("PHPSESSID");
+
+
+  $.ajax({
+    type: "post",
+    url: "./../index.php",
+    data: {
+      c: "Address",
+      a: "get",
+      cool: state
+    },
+    success: show
+  });
+  var dataobj = {
+    people: people = undefined,
+    phone: phone = undefined,
+    cmbProvince: cmbProvince = undefined,
+    cmbCity: cmbCity = undefined,
+    cmbArea: cmbArea = undefined,
+    blank: blank = undefined,
+    date: date = undefined
+  };
+
+
+  function makes(ele) {
+    if ($("#" + ele + "").val() == '') {
+      $("#" + ele + "").css('border', '1px solid red');
+    } else {
+      $("#" + ele + "").css('border', '');
+      return $("#" + ele + "").val();
+    }
+  }
+
+  function ale(arg) {
+    switch (arg) {
+      case 'people':
+        alert('请输入用户名！');
+        break;
+      case 'phone':
+        alert('请输入手机号！');
+        break;
+      case 'date':
+        alert('请填写详细地址！');
+        break;
+    }
+  }
+
+  $("#people").on('change', function () {
+    dataobj.people = makes('people');
+  })
+
+  $("#phone").on('change', function () {
+    dataobj.phone = makes('phone');
+  })
+
+  $("#date").on('change', function () {
+    dataobj.date = makes('date');
+  })
+
+  // 地址添加
+
+  $("#btn").on("click", function () {
+    dataobj.cmbProvince = $('#cmbProvince').val();
+    dataobj.cmbCity = $('#cmbCity').val();
+    dataobj.cmbArea = $('#cmbArea').val();
+    dataobj.blank = $('#blank').val();
+    let flag=true,arr=[];
+    for (let i in dataobj) {
+      if (dataobj[i] == undefined) {
+        flag=false;
+        arr.push(i);
+      }
+    }
+
+    if(!flag){
+      for(let i in arr){
+        ale(arr[i]);
+      }
+    }else{
+      console.log(dataobj)
+    }
+    //   $.ajax({
+    //     type: "post",
+    //     url: "./../index.php",
+    //     data: {
+    //       c: "Address",
+    //       a: "set",
+    //       cool: state,
+    //       list: dataobj
+    //     },
+    //     success: function (e) {
+    //       if (e) {
+    //         alert("添加成功！");
+    //         $(".modal").modal("hide");
+    //         $.ajax({
+    //           type: "post",
+    //           url: "./../index.php",
+    //           data: {
+    //             c: "Address",
+    //             a: "get",
+    //             cool: state
+    //           },
+    //           success: show
+    //         });
+    //       }
+    //     }
+    //   });
+  });
+
+  var adds = '';
+
+  function show(e) {
+    var res = JSON.parse(e);
+    var html = '';
+    var add = '';
+    $("#address")[0].innerHTML = '';
+    if (res == "[]") {
+      $("#address").html("您还没有收货地址，请添加地址！");
+    } else {
+      for (i in res) {
+        if (res[i]["default"] == 1) {
+          add = '<input type="radio" name="addre" checked class="adds mb-3" as="' + res[i]["id"] + '">' + '[默认]' +
+            res[i]["people"] +
+            "&nbsp;&nbsp;" +
+            res[i]["phone"] +
+            "&nbsp;&nbsp;" +
+            res[i]["province"] +
+            "&nbsp;&nbsp;" +
+            res[i]["city"] +
+            "&nbsp;&nbsp;" +
+            res[i]["county"] +
+            "&nbsp;&nbsp;" +
+            res[i]["full"] + '<input type="button" name="' + res[i]["id"] + '" class="ml-5 del" value="删除"><br>';
+        } else {
+          $("#address")[0].innerHTML = '';
+          html += '<input type="radio" name="addre" class="adds mb-3" as="' + res[i]["id"] + '">' +
+            res[i]["people"] +
+            "&nbsp;&nbsp;" +
+            res[i]["phone"] +
+            "&nbsp;&nbsp;" +
+            res[i]["province"] +
+            "&nbsp;&nbsp;" +
+            res[i]["city"] +
+            "&nbsp;&nbsp;" +
+            res[i]["county"] +
+            "&nbsp;&nbsp;" +
+            res[i]["full"] + '<input type="button" name="' + res[i]["id"] + '" class="ml-5 del" value="删除"><br>';
+          $("#address")[0].innerHTML = add + html;
+        }
+      }
+      var allradio = document.getElementsByClassName('adds');
+      for (var i = 0; i < allradio.length; i++) {
+        allradio[i].onchange = function () {
+          adds = this.getAttribute('as')
+        }
+        if (allradio[i].checked == true) {
+          adds = allradio[i].getAttribute('as');
+        }
+      }
+
+      let delAll = document.getElementsByClassName('del');
+      for (var i = 0; i < delAll.length; i++) {
+        delAll[i].onclick = function () {
+          var id = this.getAttribute('name');
+          console.log(id);
+          $.ajax({
+            type: 'post',
+            url: './../index.php',
+            data: {
+              c: 'Address',
+              a: 'del',
+              id: id
+            },
+            success: function (e) {
+              if (e) {
+                $.ajax({
+                  type: "post",
+                  url: "./../index.php",
+                  data: {
+                    c: "Address",
+                    a: "get",
+                    cool: state
+                  },
+                  success: show
+                });
+              }
+            }
+          })
+        }
+      }
+    }
+  }
+
+
+  // 获取cookie 的方法
+  function getcookie(Name) {
+    var search = Name + "="; //查询检索的值
+    var returnvalue = ""; //返回值
+    if (document.cookie.length > 0) {
+      sd = document.cookie.indexOf(search);
+      if (sd != -1) {
+        sd += search.length;
+        end = document.cookie.indexOf(";", sd);
+        if (end == -1) end = document.cookie.length;
+        //unescape() 函数可对通过 escape() 编码的字符串进行解码。
+        returnvalue = unescape(document.cookie.substring(sd, end));
+      }
+    }
+    return returnvalue;
+  }
+
+  $("#ok").on("click", function () {
+    if (adds == '') {
+      alert('请先添加地址！')
+    } else {
+      $.ajax({
+        type: "post",
+        url: "./../index.php",
+        data: {
+          c: "Order",
+          a: "factory",
+          cool: state,
+          address: adds,
+          list: data
+        },
+        success: function (e) {
+          if (e) {
+            location.href = "./over.html?all=" + all + "&add=" + adds + "&num=" + e + "";
+          }
+        }
+      });
+    }
+
+  });
+</script>
+
+</html>

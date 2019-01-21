@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>注册</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+    <script src="js/jquery-3.3.1.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+
+</head>
+
+<body>
+    <div class="container text-center" id="cont" style="min-width: 1150px;">
+        <div class="row">
+            <div class="col col-12 font-weight-bold mt-5" style="font-size:1.7rem;">
+                帐号注册
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-5 mt-5" style="margin:0 auto">
+                <input type="text" maxlength="11" id="phone" placeholder="请输入11位大陆正确手机号码" class="form-control mt-5">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-5 mt-3" style="margin:0 auto">
+                <input type="password" maxlength="15" id="password" placeholder="请输入密码" class="form-control mt-2">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-5 mt-3  text-left pl-4" style="margin:0 auto;font-size: 0.9rem;">
+                密码长度须介于 8-15 字并至少包含两种下列字元的组合：字母，数字或特殊字符
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-5 mt-0" style="margin:0 auto">
+                <input type="password" maxlength="15" id="dbpassword" placeholder="请输入确认密码" class="form-control mt-2">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-5 mt-3  text-left pl-4" style="margin:0 auto;font-size: 0.9rem;">
+                <div class="col mt-3">
+                    <div class="row" style="font-size: 1rem;">
+                        <input type="checkbox" id="check1" class="mt-2" style="width:30px;height: 30px;vertical-align: middle">
+                        我已阅读并同意 使用条款<br>
+                        本服务仅适用于诺基亚手机商城
+                    </div>
+                </div>
+                <div class="col mt-3">
+                    <div class="row" style="font-size: 1rem;">
+                        <input type="checkbox" class="mt-2" style="width:30px;height: 30px;vertical-align: middle">
+                        我愿意收到诺基亚手机的产品新闻及相关信息； <br>
+                        我也能随时取消
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col col-5 mt-5  text-left pl-4 " style="margin:0 auto;font-size: 0.9rem;">
+                <button class="btn  ml-3 mt-3 btn-danger" style="width: 400px;" id="btn">下一步</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col col-5 mt-4  text-center pl-4" style="margin:0 auto;font-size: 0.9rem;">
+                继续流程，即表示您同意 HMD Global’s 隐私权条款
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col col-5 mt-4 mb-5 text-center pl-4" style="margin:0 auto;font-size: 0.9rem;">
+                <img src="img/hu.png" alt="">
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    var user_id=null;
+    $(document).ready(function () {
+        $('#check1').on('change', function () {
+            if ($('#check1').is(':checked')) {
+                $('#btn').addClass('btn-info');
+                $('#btn').removeClass('btn-danger');
+                $('#btn').on('click', function () {
+                    var res = FormValidation();
+                    if (res) {
+                        var phone = $('#phone').val();
+                        var password = $('#password').val();
+                        $.ajax({
+                            type: 'post',
+                            url: './../index.php',
+                            data: {
+                                c: 'User',
+                                a: 'add',
+                                num:'1',
+                                list: [{
+                                    'phone': phone,
+                                    'password': password,
+                                }]
+                            },
+                            success: function (e) {
+                                var res=JSON.parse(e);
+                                switch(res['code']){
+                                    case 1:
+                                        if(res['msg']){
+                                            user_id=res['info'];
+                                            $('#cont').load('registry_2.html');
+                                        }
+                                        break;
+                                    case 2:
+                                        alert('请求失败，请稍后再试！');
+                                        break;
+                                    case 3:
+                                        alert(res['info']);
+                                        break;
+                                }
+                            }
+                        })
+                    }
+                })
+            } else {
+                $('#btn').addClass('btn-danger');
+                $('#btn').removeClass('btn-info');
+            }
+        })
+    })
+
+
+
+    var phnumber_bool = false;
+    var password1_bool = false;
+    var password2_bool = false;
+
+    //验证手机号
+    $('#phone').blur(function () {
+        var phnumberval = $('#phone').val();
+        var re = /^1(3[0-9]|47|5[0-3|5-9]|7[0|6|7]|8[0|2-9])\d{8}/g;
+        if (phnumberval.length != 0 && re.test(phnumberval)) {
+            $('#phone')[0].style.border = '2px solid green';
+            phnumber_bool = true;
+        } else {
+            $('#phone')[0].style.border = '2px solid red';
+            phnumber_bool = false;
+        }
+    });
+
+    //验证密码
+    $('#password').blur(function () {
+        var password1val = $('#password').val();
+        var re = /^[a-zA-Z\d_]{8,15}$/;
+        if (password1val.length != 0 && re.test(password1val)) {
+            $('#password')[0].style.border = '2px solid green';
+            password1_bool = true;
+        } else {
+            $('#password')[0].style.border = '2px solid red';
+            password1_bool = false;
+        }
+    });
+
+    //验证确认密码
+    $('#dbpassword').blur(function () {
+        var password1val = $('#password').val();
+        var password2val = $('#dbpassword').val();
+        if (password2val.length != 0 && password2val == password1val) {
+            $('#dbpassword')[0].style.border = '2px solid green';
+            password2_bool = true;
+        } else {
+            $('#dbpassword')[0].style.border = '2px solid red';
+            password2_bool = false;
+        }
+    });
+
+
+    function FormValidation() {
+        //判断返回的结果是否满足条件
+        var arrbool = new Array(
+            phnumber_bool,
+            password1_bool,
+            password2_bool);
+        for (var j in arrbool) {
+            if (arrbool[j] != true) {
+                alert('注册失败：请完善您的信息！');
+                return false;
+            } else {
+                return true
+            }
+        }
+    }
+</script>
+
+</html>

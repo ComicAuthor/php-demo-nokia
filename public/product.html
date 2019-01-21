@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>产品</title>
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+  <script src="js/jquery-3.3.1.js" type="text/javascript" charset="utf-8"></script>
+  <script src="js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+  <link rel="stylesheet" href="css/product.css" />
+  <style>
+    #detail img {
+        width: 100%;
+      }
+    </style>
+</head>
+
+<body>
+  <div id="head"></div>
+  <div id="nav_left"></div>
+  <div class="topnav mt-5 ml-5">
+    <span style="color: gray;font-size: .9rem;">商城首页 > </span>
+    <span style="color: gray;font-size: .9rem;">智能手机 > </span>
+    <span style="color: gray;font-size: .9rem;" id="productName">Nokia / 诺基亚 X7</span>
+  </div>
+
+  <div class="container ">
+    <div class="row mt-5">
+      <div class="col col-5 ">
+        <div class="img_box">
+          <img id="simg" src="https://product-res.baozun.com/prod/88000027/images/hbccAdRrzh.jpg" alt="" />
+          <div class="mask"></div>
+        </div>
+      </div>
+      <div class="col col-6">
+        <h2 id="Pname">Nokia / 诺基亚 X7</h2>
+        <h5 style="color: gray" id="present">
+          6.18 英寸全高清屏 / 高通骁龙 710/OIS 光学防抖
+        </h5>
+        <div class="row mt-2 mb-2" style="width: 100%;height: 50px;background: rgb(245, 245, 245)">
+          <div class="col col-12" style="line-height: 50px">
+            <h3 style="display: inline">￥</h3>
+            <h3 style="display: inline" id="rate">2499.00</h3>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col text-left" style="color: gray">选择颜色</div>
+        </div>
+        <div class="row text-center" id="color"></div>
+
+        <div class="row mt-3">
+          <div class="col text-left" style="color: gray">版本类型</div>
+        </div>
+        <div class="row text-center" id="cun"></div>
+
+        <div class="row mt-3">
+          <div class="col text-left" style="color: gray">套餐类型</div>
+        </div>
+        <div class="row text-center">
+          <div class="row" style="display: block">
+            <div class="col col-6 ml-5 mt-3">
+              <button class="btn btn-success" disabled="true">
+                官方标配
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col text-left" style="color: gray">数量</div>
+        </div>
+        <div class="row text-center">
+          <div class="row" style="display: block">
+            <div class="col col-6 ml-5 mt-3">
+              <input type="number" id="num" value="1" class="form-control" />
+            </div>
+          </div>
+        </div>
+
+        <div class="row text-center mt-5">
+          <div class="col col-6 mt-3">
+            <button class="btn btn-info" style="width: 170px;" id="carts">
+              加入购物车
+            </button>
+          </div>
+          <div class="col col-6  mt-3">
+            <button class="btn btn-success" style="width: 170px;" id="xin">
+              立即购买
+            </button>
+          </div>
+        </div>
+        <div class="row mt-4" style="color: gray">
+          7 天无理由退货丨15 天质量问题换货丨一年质保
+        </div>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col" id="detail" style="width: 1140px;"></div>
+    </div>
+  </div>
+
+  <div class="img_box1">
+    <img id="bimg" src="https://product-res.baozun.com/prod/88000027/images/hbccAdRrzh.jpg" alt="" class="img_b" />
+  </div>
+  <div id="footer"></div>
+  <script>
+    var id = null;
+    var pArr = [];
+    var all = {},
+      sid = {
+        id: 0
+      };
+    var dataobj = {};
+
+    $("#footer").load("footer.html");
+    $("#head").load("head.html");
+    $("#nav_left").load("nav.html");
+
+    id = location.href.split("?")[1].split("=")[1];
+    var img_box = document.getElementsByClassName("img_box")[0];
+    var img_box1 = document.getElementsByClassName("img_box1")[0];
+    var mask = document.getElementsByClassName("mask")[0];
+    var img_b = document.getElementsByClassName("img_b")[0];
+
+    //鼠标经过图片盒子时，遮罩层和右边大盒子展现
+    img_box.onmouseenter = function (e) {
+      var event = e || window.event;
+      mask.style.display = "block";
+      img_box1.style.display = "block";
+    };
+    //鼠标出图片盒子时，遮罩层和右边大盒子消失
+    img_box.onmouseleave = function (e) {
+      var event = e || window.event;
+      mask.style.display = "none";
+      img_box1.style.display = "none";
+    };
+    //鼠标在图片盒子内移动
+    // debugger
+    img_box.onmousemove = function (e) {
+      var event = e || window.event;
+
+      var offsetL_ = this.offsetLeft;
+      var offsetT_ = this.offsetTop;
+      var box1Height_ = this.offsetHeight;
+      var box1Width_ = this.offsetWidth;
+
+      var x = event.clientX - offsetL_ - mask.offsetWidth;
+      var y = event.clientY - offsetT_ - mask.offsetHeight;
+      var x_ = box1Width_ - mask.offsetWidth;
+      var y_ = box1Height_ - mask.offsetHeight;
+      if (x < 0) {
+        x = 0;
+      }
+      if (y < 0) {
+        y = 0;
+      }
+      if (x > x_) {
+        x = x_;
+      }
+      if (y > y_) {
+        y = y_;
+      }
+      mask.style.left = x + "px";
+      mask.style.top = y + "px";
+      img_b.style.left = -x * 2 + "px";
+      img_b.style.top = -y * 2 + "px";
+    };
+
+    var num=1;
+    $("#num").on("blur", function () {
+      var newnum = $("#num").val();
+      if (newnum <= 0) {
+        $("#num").val(num);
+      }
+    });
+
+    // 渲染页面
+
+    if (id != null) {
+      $.ajax({
+        type: "post",
+        url: "./../index.php",
+        data: {
+          c: "Product",
+          a: "getOne",
+          id: id
+        },
+        success: show
+      });
+    }
+    var colorhtml = "",
+      cunhtml = "";
+    var sp = "",
+      imgs = "";
+
+    function show(e) {
+      var res = JSON.parse(e);
+      pArr = res;
+      $("#productName").html(res["goods_name"]);
+      $("#Pname").html(res["goods_name"]);
+      $("#present").html(res["goods_present"]);
+      $("#rate").html(parseInt(res["goods_price"]).toFixed(2));
+      sp = res["goods_spec"];
+      var spec = res["goods_spec"].split(",");
+      var spec_color = spec[0],
+        spec_cun = spec[1];
+      colorhtml +=
+        '<div class="col col-4 ml-4 mt-3"><button class="btn s_c" ">' +
+        spec_color +
+        "</button></div>";
+      $("#color").html(colorhtml);
+      cunhtml +=
+        '<div class="col col-4 ml-5 mt-3"><button class="btn s_cun" ">' +
+        spec_cun +
+        "</button></div>";
+
+      $("#cun").html(cunhtml);
+
+      $(".s_c").on("click", function () {
+        $(this).className = "btn s_c nowc";
+      });
+      $(".s_cun").on("click", function () {
+        $(this).className = "btn s_cun nowcun";
+      });
+      imgs = res["img"];
+      $("#simg")[0].src = "./../uploads/" + res["img"] + "";
+      $("#bimg")[0].src = "./../uploads/" + res["img"] + "";
+      $("#detail").html(res["goods_detail"]);
+    }
+    var state = getcookie("PHPSESSID");
+
+    $("#carts").on("click", function () {
+      if (state != "") {
+        // 商品数量
+        var num = $("#num").val();
+        $.ajax({
+          type: "post",
+          url: "./../index.php",
+          data: {
+            c: "Shop",
+            a: "setPro",
+            cool: state,
+            list: [{
+              goods_spec: pArr["goods_spec"],
+              goods_id: id,
+              goods_num: num,
+              goods_price: pArr["goods_price"],
+              goods_name: pArr["goods_name"],
+              img: pArr["img"]
+            }]
+          },
+          success: function (e) {
+            debugger
+            if (e) {
+              alert("添加成功!");
+              location.href = "./car.html";
+            }
+          }
+        });
+      } else if (state == "") {
+        alert("请您先登录！");
+      }
+    });
+
+    $("#xin").on("click", function () {
+      if (state != "") {
+        all = {
+          goods_id: id,
+          goods_name: $("#productName").html(),
+          goods_num: $("#num").val(),
+          goods_price: $("#rate").html(),
+          goods_spec: sp,
+          img: imgs
+        };
+        dataobj = [
+          [all],
+          [sid]
+        ];
+        localStorage.setItem("data", JSON.stringify(dataobj));
+        location.href = "./order.html";
+      } else if (state == "") {
+        alert("请您先登录！");
+      }
+    });
+
+    // 获取cookie 的方法
+    function getcookie(Name) {
+      var search = Name + "="; //查询检索的值
+      var returnvalue = ""; //返回值
+      if (document.cookie.length > 0) {
+        sd = document.cookie.indexOf(search);
+        if (sd != -1) {
+          sd += search.length;
+          end = document.cookie.indexOf(";", sd);
+          if (end == -1) end = document.cookie.length;
+          //unescape() 函数可对通过 escape() 编码的字符串进行解码。
+          returnvalue = unescape(document.cookie.substring(sd, end));
+        }
+      }
+      return returnvalue;
+    }
+  </script>
+</body>
+
+</html>

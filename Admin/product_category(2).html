@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <title>产品分类</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="style/adminStyle.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="style/bootstrap.min.css">
+  <script src="js/jquery.js"></script>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="page-title">
+      <span class="modular fl"><i></i><em>产品分类</em></span>
+      <span class="modular fr"><a href="add_category.html" class="pt-link-btn">+添加新分类</a></span>
+    </div>
+    <div id="cont">
+
+    </div>
+
+    <div style="overflow:hidden;">
+      <div class="turnPage center fr">
+        <a>第一页</a>
+        <a>1</a>
+        <a>最后一页</a>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(document).ready(function () {
+      $.ajax({
+        type: 'post',
+        url: './../index.php',
+        data: {
+          c: 'Product',
+          a: 'getAll',
+        },
+        success: show
+      })
+
+      function show(e) {
+        ftype = '';
+        fflag = [];
+        html = '<table class="list-style text-center"><tr><th>分类名称</th><th>父类</th><th>操作</th></tr>';
+        var res = JSON.parse(e);
+        $('#cont')[0].innerHTML = '';
+        for (var i = 0; i < res.length; i++) {
+          fflag.push([res[i]['id'], res[i]['type_name']]);
+          if (res[i]['type_fid'] == 0) {
+            ftype = '顶级类';
+            html += '<tr><td><span>' + res[i]['type_name'] + '</span></td><td><span>' + ftype +
+              '</span></td><td><input type="button" value="删除" class="btn btn-success change" name="' + res[i][
+                'id'
+              ] + '"></td></tr>';
+          }
+          for (j in fflag) {
+            if (res[i]['type_fid'] == fflag[j][0]) {
+              ftype = fflag[j][1];
+              html += '<tr><td><span>' + res[i]['type_name'] + '</span></td><td><span>' + ftype +
+                '</span></td><td><input type="button" value="删除" class="btn btn-success change" name="' + res[i][
+                  'id'
+                ] + '"></td></tr>';
+            }
+          }
+        }
+        $('#cont')[0].innerHTML += html + '</table>';
+
+        let allChange = document.getElementsByClassName('change');
+        for (var i = 0; i < allChange.length; i++) {
+          allChange[i].onclick = function () {
+            var id = this.getAttribute('name');
+            $.ajax({
+              type: 'post',
+              url: './../index.php',
+              data: {
+                c: 'Product',
+                a: 'delete',
+                id: id,
+              },
+              success: show
+            })
+          }
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>

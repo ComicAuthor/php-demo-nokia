@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>头</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+    <script src="js/jquery-3.3.1.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="css/head.css">
+</head>
+
+<body>
+    <div class="nav pt-3 pb-3">
+        <div class="logo">
+            <a href="index.html"><img src="img/nokia.png" alt="" class="logo_img"></a>
+        </div>
+        <div class="flag">丨</div>
+        <div class="phone ml-2 mr-4">手机</div>
+        <div class="index ml-4 mr-4"><a href="index.html" style="text-decoration: none;color: grey">首页</a></div>
+        <div class="autophone ml-4 mr-4" id="zhi">智能手机
+            <div id="auto">
+                <div class="row" style="width: 1200px;background: white" id="autoP">
+                </div>
+            </div>
+        </div>
+        <div class="oldphone ml-4 mr-4">经典手机
+            <div id="old">
+                <div class="row" style="width: 1200px;z-index: 100;background: white">
+                    <div class="col col-2">
+                        <div class="group1 text-center">
+                            <img src="https://product-res.baozun.com/prod/88000027/images/ec81224c97ea4aec81c71b8eb24106e4.jpg"
+                                alt="" width="150">
+                            <h4 style="font-size: 1.2rem">Nokia / 诺基亚 新 130</h4>
+                            <span style="font-size: 1.2rem">￥</span>
+                            <span style="font-size: 1.2rem">179.00</span>
+                            <span style="font-size: 1.2rem">起</span>
+                        </div>
+                    </div>
+                    <div class="col col-2">
+                        <div class="group1 text-center">
+                            <img src="https://product-res.baozun.com/prod/88000027/images/ec81224c97ea4aec81c71b8eb24106e4.jpg"
+                                alt="" width="150">
+                            <h4 style="font-size: 1.2rem">Nokia / 诺基亚 新 130</h4>
+                            <span style="font-size: 1.2rem">￥</span>
+                            <span style="font-size: 1.2rem">179.00</span>
+                            <span style="font-size: 1.2rem">起</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="parts  ml-4 mr-4">智能配件</div>
+        <div class="related ml-4 mr-4">相关支持</div>
+        <div style="width: 100px;text-align: center"><img src="img/lang.png" style="margin: 0 auto;" alt="" width="30"></div>
+        <div style="width: 100px;text-align: center" id="logoin"><a href="logoin.html"><img src="img/login.png" style="margin: 0 auto;"
+                    alt="" width="30"></a></div>
+        <div style="width: 100px;text-align: center"><a href="car.html"><img src="img/car.png" style="margin: 0 auto;"
+                    alt="" width="30"></a></div>
+
+
+    </div>
+    <script>
+        var state = getcookie('PHPSESSID');
+        if (state == '') {
+
+        } else {
+            $.ajax({
+                type: 'post',
+                url: './../index.php',
+                data: {
+                    c: 'User',
+                    a: 'lookCookie',
+                    cool: state,
+                },
+                success: function (e) {
+                    var res = e;
+                    var str = res.split('"')[1];
+                    $('#logoin').html('<a id="UserCont">' + parseFloat(str) +
+                        '</a><p id="order">订单中心</p><p id="out">退出登陆</p>');
+
+                    $('#order').on('click', function () {
+                        location.href = './ordercore.html';
+                    })
+                    $('#out').on('click', function () {
+                        $.ajax({
+                            type: 'post',
+                            url: './../index.php',
+                            data: {
+                                c: 'User',
+                                a: 'loginOut'
+                            },
+                            success: function (e) {
+                                if (e == 'true') {
+                                    $('#logoin').html(
+                                        '<a href="logoin.html"><img src="img/login.png" style="margin: 0 auto;"alt="" width="30"></a>'
+                                    )
+                                }
+                            }
+                        })
+                    })
+
+                }
+            })
+        }
+        var typearr = [],
+            arrindex = 0;
+
+        $.ajax({
+            type: 'post',
+            url: './../index.php',
+            data: {
+                c: 'Product',
+                a: 'getAll',
+            },
+            success: function (e) {
+                var res = JSON.parse(e);
+                typearr = res;
+                for (i in res) {
+                    if (res[i]['type_name'] == $('.autophone')[0].innerText) {
+                        $('.autophone')[0].name = res[i]['id'];
+                    }
+                    if (res[i]['type_name'] == $('.oldphone')[0].innerText) {
+                        $('.oldphone')[0].name = res[i]['id'];
+                    }
+                }
+
+                $.ajax({
+                    type: 'post',
+                    url: './../index.php',
+                    data: {
+                        c: 'Product',
+                        a: 'selectAllProduct',
+                    },
+                    success: shows
+                })
+            }
+        })
+
+        $('#zhi').on('click', function () {
+            location.href = './product_list.html';
+        })
+
+
+
+
+
+        var newarr = [],
+            index = 0;
+
+        function shows(e) {
+            arrindex = 0;
+            var res = JSON.parse(e);
+            autohtml = '';
+            oldhtml = '';
+            for (i in res) {
+                if (res[i]['goods_state'] == 0) {
+                    index++;
+                } else {
+                    newarr.push(res[i]);
+                }
+            }
+            for (i in newarr) {
+                if (newarr[i]['goods_type'] == $('.autophone')[0].name) {
+                    arrindex++;
+                }
+            }
+            if (arrindex != '') {
+                autoarr = getrandomArr(0, arrindex, 5);
+                oldarr = getrandomArr(0, arrindex, 5);
+                for (i in autoarr) {
+                    if (autoarr[i] == newarr.length) {
+                        num = autoarr[i] - 1;
+                    } else {
+                        num = autoarr[i];
+                    }
+                    autohtml += '<div class="col col-2" name="' + newarr[num]['id'] +
+                        '" onclick="make(this)"><div class="group1 text-center"><img src="./../uploads/' +
+                        newarr[
+                            num][
+                            'img'
+                        ] + '"alt=""width="150"><h4 style="font-size: 1.2rem">' + newarr[num]['goods_name'] +
+                        '</h4><span style="font-size: 1.2rem">￥</span><span style="font-size: 1.2rem">' +
+                        parseInt(newarr[
+                            num]['goods_price']).toFixed(2) +
+                        '</span><span style="font-size: 1.2rem">起</span></div></div>';
+                }
+                $('#autoP').html(autohtml);
+            }
+
+            function make(box) {
+                var id = box.getAttribute('name');
+                location.href = './product.html?product=' + id + '';
+            }
+        }
+
+        function getRandom(min, max) {
+            return Math.round(Math.random() * (max - min) + min);
+        }
+
+        function getrandomArr(min, max, num) {
+            var arr = [];
+            while (arr.length < num) {
+                var n = getRandom(min, max);
+                if (arr.indexOf(n) == -1) {
+                    arr.push(n);
+                }
+            }
+            return arr;
+        }
+        // 获取cookie 的方法
+        function getcookie(Name) {
+            var search = Name + "=" //查询检索的值
+            var returnvalue = ""; //返回值
+            if (document.cookie.length > 0) {
+                sd = document.cookie.indexOf(search);
+                if (sd != -1) {
+                    sd += search.length;
+                    end = document.cookie.indexOf(";", sd);
+                    if (end == -1)
+                        end = document.cookie.length;
+                    //unescape() 函数可对通过 escape() 编码的字符串进行解码。
+                    returnvalue = unescape(document.cookie.substring(sd, end))
+                }
+            }
+            return returnvalue;
+        }
+    </script>
+</body>
+
+</html>

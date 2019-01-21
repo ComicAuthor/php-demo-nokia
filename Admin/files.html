@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="js/jquery.js"></script>
+</head>
+
+<body>
+    <input type="file" id="img" multiple>
+    <input type="button" name="" id="btn" value="确定">
+    <div class="cont"></div>
+    <img src="#" width="80" height="80" class="mlr5" id="imgs" />
+    <script>
+        btn.onclick = function () {
+            var file_obj = document.getElementById('img').files;
+            var fd = new FormData();
+            for (var i = 0; i < file_obj.length; i++) {
+                fd.append('file', file_obj[i]);
+                $.ajax({
+                    type: 'post',
+                    url: './../uploads/uploads.php',
+                    data: fd,
+                    processData: false,
+                    contentType: false,
+                    success: function (e) {
+                        var resobj=JSON.parse(e);
+                        var img = document.createElement('img');
+                        img.src = resobj['url'];
+                        img.name = resobj['name'];
+                        $('.cont').append(img);
+                    }
+                })
+            }
+        }
+    </script>
+</body>
+
+</html>

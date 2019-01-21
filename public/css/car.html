@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/index.css">
+    <script src="js/jquery-3.3.1.js"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/fy.js"></script>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<style>
+    input[type='checkbox']{
+    width: 20px;
+    height: 20px;
+    border: 1px solid #c9c9c9;
+    border-radius: 2px;
+}
+ #td img{
+        width: 50%;
+    }
+    .lxp_goods_num div {
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        width: 10%;
+        height: 20px;
+        border: 1px solid black;
+        box-sizing: border-box;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 17%;
+    }
+</style>
+<header id="nav"></header>
+<div class="container">
+    <div class="card mt-2">
+        <div class="card-body text-center">
+            我的购物车
+        </div>
+    </div>
+    <table class="table mt-5">
+        <thead class="text-center align-items-center">
+            <th>
+                <div class="align-items-center" style="display: flex">
+                    <input id="all_select" type="checkbox">
+                    <lable for="all_select" class="ml-2">全选/反选</lable>
+                </div>
+            </th>
+            <th>商品名称</th>
+            <th>价格（元）</th>
+            <th>数量</th>
+            <th>小计（元） </th>
+            <th>操作</th>
+        </thead>
+        <tbody id="td" class="text-center" style="line-height: 500%">
+        </tbody>
+        <thead>
+            <tr>
+                <td colspan="6">
+                    商品总价:&yen;<label class="text-danger" id="c_price">0.00</label>
+
+                    <button class="btn btn-danger ml-5" id="js">去结算</button>
+                </td>
+            </tr>
+        </thead>
+    </table>
+
+</div>
+
+<hr class="mt-5">
+<footer id="footer" class="mt-5"></footer>
+<script>
+    $(document).ready(function () {
+        //加载底部
+
+        $("#js").on("click",function(){
+            window.location.href="order.html?t="+new Date().getTime();
+        })
+        let money = 0;
+        $("#footer").load("footer.html");
+
+        //加载导航
+        $("#nav").load("heard.html");
+
+        //计算小计函数
+        function xj() {
+            let xj = $(".xj");
+            for (let i = 0; i < xj.length; i++) {
+                xj.eq(i).find("#xj_").text(parseInt(xj.eq(i).siblings("#num").find("#goods_num").text()) * parseInt(xj.eq(i).siblings("#price").find("#price_").text())+".00");
+            }
+        }
+        //商品总价函数
+        function c_price() {
+            for (let i = 0; i < $(".xj").length; i++) {
+                console.log($(".xj").eq(i).parents("tr").find("input").prop("checked"))
+                if ($(".xj").eq(i).parents("tr").find("input").prop("checked")) {
+
+                    money += parseInt($(".xj").eq(i).find("#xj_").text());
+                }
+
+            }
+            $("#c_price").text(money+".00");
+        }
+        //全选函数
+        function all_select() {
+            let flage = false;
+            $("#all_select").on("click", function () {
+                let checked = $(".one_select");
+                for (let i = 0; i < $(".one_select").length; i++) {
+                    if (!$(".one_select").eq(i).prop("checked")) {
+                        flage = true;
+                    }
+                }
+
+                if (flage) {
+                    $(this).prop("checked", "checked");
+                    checked.prop("checked", "checked");
+                    c_price();
+                    flage = false;
+                } else {
+                    checked.prop("checked", "");
+                    $("#c_price").text(0);
+                }
+
+
+                //  if($(".one_select").eq(i).prop("checked")){
+
+                // $("#c_price").text(0);
+                //   }else{
+
+                //   } 
+            })
+        }
+
+        //删除函数
+        function delete_() {
+            $(".d_btn").on("click", function () {
+                $(this).parents("tr").remove();
+            })
+        }
+        //页面初始化加载数据
+        init(function () {
+
+            $(".one_select").on("click", function () {
+                money = 0;
+                c_price();
+            })
+
+            all_select();
+
+            xj();
+            //增加商品数量
+            $(".add").on("click", function () {
+                money = 0;
+                let a = $(this).siblings("#goods_num");
+                a.text(parseInt(a.text()) + 1);
+                xj();
+                c_price();
+                // if (a.text() >= 10) {
+                //     alert("牛逼~···继续~！别停")
+                // }
+            })
+
+            //减少商品数量
+            $(".reduce").on("click", function () {
+                money = 0;
+                let a = $(this).siblings("#goods_num");
+                a.text(parseInt(a.text()) - 1);
+                if (a.text() <= 0) {
+                    a.text(1);
+                }
+                xj();
+                c_price();
+            })
+            //删除商品
+            delete_();
+        });
+
+        function init(callback) {
+            $.ajax({
+                url: "./../index.php",
+                type: "get",
+                data: {
+                    c: "car",
+                    a: "query",
+                    sessionid: get_cookie("login_state")
+                },
+                success: function (e) {
+                    let data = JSON.parse(e);
+                    console.log(data);
+                    if (data.state == "200") {
+                        let html = "";
+                        for (let i = 0; i < data.data.length; i++) {
+                            html += `
+                    <tr>
+                       <td >
+                    <div class="align-items-center" style="display: flex;height:60px">
+                    <input class="one_select" type="checkbox">
+                </div>
+                        </td>
+                     <td style="width:10%"> 
+                    <div class="align-items-center" style="display: flex">
+                      <img src="./../uploads/img/${JSON.parse(data.data[i].goods_img)[0]}">
+                     <lable style="display:inline-block">${data.data[i].goods_name}</lable>
+                     
+                    </div>
+                     
+                     </td>
+                        <td id="price">
+                            &yen;
+                           <lable id="price_" class="text-danger"> ${data.data[i].goodsPrice}</lable></td>
+                        <td id="num"><div class="lxp_goods_num">
+                                    <div class="reduce">-</div>
+                                    <div id="goods_num">${data.data[i].goods_num}</div>
+                                    <div class="add">+</div>
+                                </div></td>
+                        <td class="xj">
+                                &yen;
+                           <lable id="xj_" class="text-danger"></lable></td>
+                            </td>
+                        <td><button class="btn btn-dark d_btn">删除</button></td>
+                    </tr>
+                    `;
+                        }
+                        $("#td").append(html);
+                        callback();
+                    }
+                    else {
+                        alert("你没有登陆！");
+
+                    }
+                }
+            })
+        }
+
+
+    })
+</script>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>订单中心</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+    <script src="js/jquery-3.3.1.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div id="head"></div>
+    <div id="nav_left"></div>
+
+    <div class="container-fluid" style="background: rgb(245,245,245)">
+        <!-- 头 -->
+        <div class="row ml-5">
+            <div class="col" style="font-size: 1.5rem;font-weight: bolder">
+                订单中心
+            </div>
+        </div>
+        <!-- 身 -->
+        <div class="row mt-3 justify-content-center" id="cont">
+            <!-- 一个模块 -->
+            
+        </div>
+    </div>
+
+    <div id="footer"></div>
+    <script>
+        $('#footer').load('footer.html');
+        $("#head").load('head.html');
+        $("#nav_left").load('nav.html');
+
+        var state = getcookie('PHPSESSID');
+        if (state == '') {
+
+        } else {
+
+            $.ajax({
+                type: 'post',
+                url: './../index.php',
+                data: {
+                    c: 'User',
+                    a: 'lookCookieid',
+                    cool: state
+                },
+                success: function (e) {
+                    var news = e.split('"')[1];
+                    $.ajax({
+                        type: 'post',
+                        url: './../index.php',
+                        data: {
+                            c: 'Order',
+                            a: 'sela',
+                            uid: news
+                        },
+                        success: show
+                    })
+                }
+            })
+        }
+
+        function show(e) {
+            var res = JSON.parse(e);
+            
+            var html = '';
+            var html_ = '';
+            var htmls = '';
+            var alls = 0;
+            for (var i = 0; i < res.length; i++) {
+                if (res[i]['address'] == '') {
+                    all = res[1]['address']
+                } else {
+                    all = res[i]['address']
+                }
+                html +=
+                    `<div class="col-10 mt-4">
+                <div class="row">
+                    <div class="col-3">收货人：${all[0]['people']}</div>
+                    <div class="col-3">收货号码：${all[0]['phone']}</div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        收货地址：${all[0]['province']}${all[0]['city']}${all[0]['county']}${all[0]['full']}
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <table class="table table-bordered text-center table-light">
+                        <thead>
+                            <tr>
+                                <th>图片</th>
+                                <th>商品名</th>
+                                <th>规格</th>
+                                <th>单价</th>
+                                <th>数量</th>
+                                <th>总价</th>
+                            </tr>
+                        </thead>
+                        <tbody class="conts">
+                           
+                        </tbody>
+                    </table>
+                </div>
+            </div>`;
+            }
+            $('#cont').html(html);
+            var allconts = document.getElementsByClassName('conts');
+            for (var i = 0; i < res.length; i++) {
+                if (res[i]['detail'].length == 1) {
+                    alls = 0;
+                    alls += parseInt(res[i]['detail'][0]['goods_price']) * parseInt(res[i]['detail'][0]['goods_num']);
+                    html_ = ''
+                    html_ +=
+                        ` <tr>
+                                <td><img src="./../uploads/${res[i]['detail'][0]['img']}" alt="" width="150"></td>
+                                <td>${res[i]['detail'][0]['goods_name']}</td>
+                                <td>${res[i]['detail'][0]['goods_spec']}</td>
+                                <td>${res[i]['detail'][0]['goods_price']}</td>
+                                <td>${res[i]['detail'][0]['goods_num']}</td>
+                                <td>${alls}</td>
+                            </tr>`;
+                    allconts[i].innerHTML = html_;
+                } else {
+                    htmls = '';
+                    alls = 0;
+                    for (var j = 0; j < res[i]['detail'].length; j++) {
+                        alls = parseInt(res[i]['detail'][j]['goods_price']) * parseInt(res[i]['detail'][j]['goods_num']);
+
+                        htmls +=
+                            `           
+                            <tr>
+                                <td><img src="./../uploads/${res[i]['detail'][j]['img']}" alt="" width="150"></td>
+                                <td>${res[i]['detail'][j]['goods_name']}</td>
+                                <td>${res[i]['detail'][j]['goods_spec']}</td>
+                                <td>${res[i]['detail'][j]['goods_price']}</td>
+                                <td>${res[i]['detail'][j]['goods_num']}</td>
+                                <td>${alls}</td>
+                            </tr>
+                     `
+                    }
+                    allconts[i].innerHTML = htmls;
+                }
+            }
+
+
+            // for (var i = 0; i < res.length; i++) {
+            //     alls=0;
+            //     for (var j = 0; j < res[i]['detail'].length; j++) {
+            //         alls += parseInt(res[i]['detail'][j]['goods_price']) * parseInt(res[i]['detail'][j]['goods_num']);
+            //         html_ +=
+            //             `<tr>
+            //                     <td><img src="./../uploads/${res[i]['detail'][j]['img']}" alt="" width="150"></td>
+            //                     <td>${res[i]['detail'][j]['goods_name']}</td>
+            //                     <td>${res[i]['detail'][j]['goods_spec']}</td>
+            //                     <td>${res[i]['detail'][j]['goods_price']}</td>
+            //                     <td>${res[i]['detail'][j]['goods_num']}</td>
+            //                     <td>${alls}</td>
+            //                 </tr>`;
+            //         allconts[j].innerHTML = html_;
+            //     }
+            // }
+        }
+
+
+        // 获取cookie 的方法
+        function getcookie(Name) {
+            var search = Name + "=" //查询检索的值
+            var returnvalue = ""; //返回值
+            if (document.cookie.length > 0) {
+                sd = document.cookie.indexOf(search);
+                if (sd != -1) {
+                    sd += search.length;
+                    end = document.cookie.indexOf(";", sd);
+                    if (end == -1)
+                        end = document.cookie.length;
+                    //unescape() 函数可对通过 escape() 编码的字符串进行解码。
+                    returnvalue = unescape(document.cookie.substring(sd, end))
+                }
+            }
+            return returnvalue;
+        }
+    </script>
+</body>
+
+</html>

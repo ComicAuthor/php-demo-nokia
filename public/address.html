@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>地址管理</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+    <script src="js/jquery-3.3.1.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jsAddress.js"></script>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-8 ml-3" style="height: 700px;background: white">
+          <div class="row">
+            <div class="col mt-4">
+              <h3 style="color: rgb(117,87,102)">收货地址</h3>
+            </div>
+          </div>
+          <div class="row mt-3 " style="width: 600px">
+            <div class="col col-4 border text-center" id="newaddress">
+              <div class="row mt-5">
+                <div class="col"><img src="img/jia.png" alt="" /></div>
+              </div>
+              <div class="row"><div class="col">添加新地址</div></div>
+            </div>
+
+            <div class="col col-4 border text-center">
+              <button class="btn btn-outline-success" id="get">获取</button>
+              <div class="row mt-3">
+                <div class="col col-4">陈江波</div>
+                <div class="col col-5">176****2345</div>
+              </div>
+              <div class="row mt-3 mb-3 text-left">
+                <div class="col">陕西省西安市雁塔区丈八沟街道</div>
+              </div>
+              <div class="row mt-3 mb-3">
+                <div class="col-5">默认地址</div>
+                <div class="col-3">删除</div>
+                <div class="col-3">编辑</div>
+              </div>
+            </div>
+            <div class="col col-4 border text-center">
+              <div class="row mt-3">
+                <div class="col col-4">陈江波</div>
+                <div class="col col-5">176****2345</div>
+              </div>
+              <div class="row mt-3 mb-3 text-left">
+                <div class="col">陕西省西安市雁塔区丈八沟街道</div>
+              </div>
+              <div class="row mt-3 mb-3">
+                <div class="col-3">删除</div>
+                <div class="col-3">编辑</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <span class="text-dark">添加地址</span>
+            <p class="close" data-dismiss="modal">&times;</p>
+          </div>
+          <div class="modal-body">
+            收货人：<input
+              type="text"
+              placeholder="请输入收货人名称"
+              class="form-control mt-2"
+              id="people"
+            />
+            手机号码：<input
+              type="number"
+              placeholder="请输入收货人手机号"
+              class="form-control mt-2"
+              id="phone"
+            />
+            选择地区：<br /><select id="cmbProvince" class="mt-2"></select>
+            <select id="cmbCity"></select>
+            <select id="cmbArea" class="mb-2"></select
+            ><br />
+            详细地址：<input
+              type="text"
+              placeholder="请输入详细地址"
+              class="form-control mt-2"
+              id="date"
+            />
+            默认地址：<select id="auto" class="mt-2">
+              <option value="1">是</option>
+              <option value="0">否</option>
+            </select>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-outline-success" id="btn">确定</button>
+            <button class="btn btn-outline-success" data-dismiss="modal">
+              取消
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      $("#newaddress").on("click", function() {
+        $(".modal").modal("show");
+      });
+      addressInit("cmbProvince", "cmbCity", "cmbArea");
+      var state = getcookie("PHPSESSID");
+      $("#btn").on("click", function() {
+        var dataobj = {
+          name: $("#people").val(),
+          phone: $("#phone").val(),
+          province: $("#cmbProvince").val(),
+          city: $("#cmbCity").val(),
+          county: $("#cmbArea").val(),
+          auto: $("#blank").val(),
+          full: $("#date").val()
+        };
+        $.ajax({
+          type: "post",
+          url: "./../index.php",
+          data: {
+            c: "Address",
+            a: "set",
+            cool: state,
+            list: dataobj
+          },
+          success: function(e) {
+            if (e) {
+              alert("添加成功！");
+            }
+          }
+        });
+      });
+
+      $("#get").on("click", function() {
+        $.ajax({
+          type: "post",
+          url: "./../index.php",
+          data: {
+            c: "Address",
+            a: "get",
+            cool: state
+          },
+          success: function(e) {
+            debugger;
+          }
+        });
+      });
+      // 获取cookie 的方法
+      function getcookie(Name) {
+        var search = Name + "="; //查询检索的值
+        var returnvalue = ""; //返回值
+        if (document.cookie.length > 0) {
+          sd = document.cookie.indexOf(search);
+          if (sd != -1) {
+            sd += search.length;
+            end = document.cookie.indexOf(";", sd);
+            if (end == -1) end = document.cookie.length;
+            //unescape() 函数可对通过 escape() 编码的字符串进行解码。
+            returnvalue = unescape(document.cookie.substring(sd, end));
+          }
+        }
+        return returnvalue;
+      }
+    </script>
+  </body>
+</html>

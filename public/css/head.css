@@ -1,0 +1,110 @@
+.nav,.cent {
+	width: 90%;
+	margin: 0 auto;
+	/* border-bottom: 1px solid gray; */
+	min-width: 1150px;
+}
+.cent{
+	border-bottom:0px;
+}
+
+.logo_img {
+	vertical-align: middle;
+	/* vertical-align: top; */
+}
+
+.flag {
+	font-size: 1.3rem;
+	color: gainsboro;
+}
+
+.phone,
+.index,
+.autophone,
+.oldphone,
+.parts,
+.related {
+	font-size: 1rem;
+	color: grey;
+	line-height: 38px;
+}
+
+.phone:hover,
+.autophone:hover,
+.oldphone:hover,
+.parts:hover,
+.related:hover {
+	color: black;
+}
+.swiper-container {
+	width: 1200px;
+	height: 570px;
+}
+.autophone{
+	position: relative;
+}
+.oldphone{
+	position: relative;	
+}
+#auto,#old{
+	z-index: 10;
+	position: absolute;
+	display: none;
+}
+#auto{
+	left: -300px;
+}
+#old{
+	left: -410px;
+}
+.autophone:hover #auto {
+	display: block;
+}
+.oldphone:hover #old{
+	display: block;
+}
+#logoin{
+	position: relative;
+}
+
+#out{
+	width: 100px;
+	height: 0px;
+	line-height: 40px;
+	position: absolute;
+	top:65px;
+	text-align: center;
+	background: rgb(245,245,245);
+	border-radius: 10px;
+	color: darkcyan;
+	z-index: 200;
+	transition: .4s;
+	font-size: 0;
+}
+
+#logoin:hover #out{
+	/* width: 100px; */
+	height: 40px;
+	font-size: 1rem;
+}
+
+#order{
+	width: 100px;
+	height: 0px;
+	line-height: 40px;
+	position: absolute;
+	top:25px;
+	text-align: center;
+	background: rgb(245,245,245);
+	border-radius: 10px;
+	color: darkcyan;
+	z-index: 200;
+	transition: .4s;
+	font-size: 0;
+}
+
+#logoin:hover #order{
+	/* width: 100px; */
+	height: 40px;
+	font-size: 1rem;
+}
