@@ -214,47 +214,48 @@
     dataobj.cmbCity = $('#cmbCity').val();
     dataobj.cmbArea = $('#cmbArea').val();
     dataobj.blank = $('#blank').val();
-    let flag=true,arr=[];
+    let flag = true,
+      arr = [];
     for (let i in dataobj) {
       if (dataobj[i] == undefined) {
-        flag=false;
+        flag = false;
         arr.push(i);
       }
     }
 
-    if(!flag){
-      for(let i in arr){
+    if (!flag) {
+      for (let i in arr) {
         ale(arr[i]);
       }
-    }else{
+    } else {
       console.log(dataobj)
     }
-    //   $.ajax({
-    //     type: "post",
-    //     url: "./../index.php",
-    //     data: {
-    //       c: "Address",
-    //       a: "set",
-    //       cool: state,
-    //       list: dataobj
-    //     },
-    //     success: function (e) {
-    //       if (e) {
-    //         alert("添加成功！");
-    //         $(".modal").modal("hide");
-    //         $.ajax({
-    //           type: "post",
-    //           url: "./../index.php",
-    //           data: {
-    //             c: "Address",
-    //             a: "get",
-    //             cool: state
-    //           },
-    //           success: show
-    //         });
-    //       }
-    //     }
-    //   });
+    $.ajax({
+      type: "post",
+      url: "./../index.php",
+      data: {
+        c: "Address",
+        a: "set",
+        cool: state,
+        list: dataobj
+      },
+      success: function (e) {
+        if (e) {
+          alert("添加成功！");
+          $(".modal").modal("hide");
+          $.ajax({
+            type: "post",
+            url: "./../index.php",
+            data: {
+              c: "Address",
+              a: "get",
+              cool: state
+            },
+            success: show
+          });
+        }
+      }
+    });
   });
 
   var adds = '';
