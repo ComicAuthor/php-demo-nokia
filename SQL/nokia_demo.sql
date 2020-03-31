@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： 127.0.0.1
--- 生成日期： 2019-01-14 02:18:11
+-- 生成日期： 2020-03-31 11:43:03
 -- 服务器版本： 10.1.36-MariaDB
 -- PHP 版本： 5.6.38
 
@@ -30,7 +30,7 @@ USE `nokia`;
 --
 -- 表的结构 `address`
 --
--- 创建时间： 2019-01-02 00:44:33
+-- 创建时间： 2020-03-31 09:39:51
 --
 
 DROP TABLE IF EXISTS `address`;
@@ -45,32 +45,23 @@ CREATE TABLE IF NOT EXISTS `address` (
   `user_id` int(10) NOT NULL COMMENT '用户id',
   `default_address` int(2) NOT NULL COMMENT '默认地址',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- 表的关系 `address`:
 --
 
 --
--- 转存表中的数据 `address`
+-- 插入之前先把表清空（truncate） `address`
 --
 
-INSERT INTO `address` (`id`, `province_id`, `city_id`, `county_id`, `full_address`, `people`, `people_phone`, `user_id`, `default_address`) VALUES
-(7, 7, 7, 7, '丈八沟街道', '陈江波', '17602946508', 4, 0),
-(13, 13, 13, 13, '12345', '陈江波', '1111111111111', 4, 0),
-(14, 14, 14, 14, '退欧', '陈江波', '17602945028', 4, 1),
-(15, 15, 15, 15, '23456', 'hahahaha', '12345678', 10, 0),
-(16, 16, 16, 16, '123456234', 'chahah', '234567', 11, 0),
-(17, 17, 17, 17, '1qwertyu', '陈123', '17602121212', 12, 0),
-(18, 18, 18, 18, '1234', '1234', '123', 4, 0),
-(19, 19, 19, 19, '123456732', '陈江波', '123445', 4, 0);
-
+TRUNCATE TABLE `address`;
 -- --------------------------------------------------------
 
 --
 -- 表的结构 `admin`
 --
--- 创建时间： 2019-01-02 00:44:33
+-- 创建时间： 2020-03-31 09:39:51
 --
 
 DROP TABLE IF EXISTS `admin`;
@@ -85,12 +76,17 @@ CREATE TABLE IF NOT EXISTS `admin` (
 -- 表的关系 `admin`:
 --
 
+--
+-- 插入之前先把表清空（truncate） `admin`
+--
+
+TRUNCATE TABLE `admin`;
 -- --------------------------------------------------------
 
 --
 -- 表的结构 `city`
 --
--- 创建时间： 2019-01-02 00:44:33
+-- 创建时间： 2020-03-31 09:39:51
 --
 
 DROP TABLE IF EXISTS `city`;
@@ -98,37 +94,23 @@ CREATE TABLE IF NOT EXISTS `city` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '城市id',
   `city_name` varchar(50) COLLATE utf8_bin NOT NULL COMMENT '城市名称',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- 表的关系 `city`:
 --
 
 --
--- 转存表中的数据 `city`
+-- 插入之前先把表清空（truncate） `city`
 --
 
-INSERT INTO `city` (`id`, `city_name`) VALUES
-(7, '西安市'),
-(8, '西安市'),
-(9, '市辖区'),
-(10, '市辖区'),
-(11, '市辖区'),
-(12, '市辖区'),
-(13, '市辖区'),
-(14, '铜仁地区'),
-(15, '市辖区'),
-(16, '市辖区'),
-(17, '兰州市'),
-(18, '市辖区'),
-(19, '西宁市');
-
+TRUNCATE TABLE `city`;
 -- --------------------------------------------------------
 
 --
 -- 表的结构 `county`
 --
--- 创建时间： 2019-01-02 00:44:33
+-- 创建时间： 2020-03-31 09:39:51
 --
 
 DROP TABLE IF EXISTS `county`;
@@ -136,37 +118,23 @@ CREATE TABLE IF NOT EXISTS `county` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '县区id',
   `county_name` varchar(40) COLLATE utf8_bin NOT NULL COMMENT '县区名字',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- 表的关系 `county`:
 --
 
 --
--- 转存表中的数据 `county`
+-- 插入之前先把表清空（truncate） `county`
 --
 
-INSERT INTO `county` (`id`, `county_name`) VALUES
-(7, '雁塔区'),
-(8, '雁塔区'),
-(9, '东城区'),
-(10, '东城区'),
-(11, '东城区'),
-(12, '东城区'),
-(13, '东城区'),
-(14, '铜仁市'),
-(15, '东城区'),
-(16, '东城区'),
-(17, '西固区'),
-(18, '东城区'),
-(19, '城东区');
-
+TRUNCATE TABLE `county`;
 -- --------------------------------------------------------
 
 --
 -- 表的结构 `goods`
 --
--- 创建时间： 2019-01-02 00:44:33
+-- 创建时间： 2020-03-31 09:39:51
 --
 
 DROP TABLE IF EXISTS `goods`;
@@ -191,10 +159,15 @@ CREATE TABLE IF NOT EXISTS `goods` (
 --
 
 --
+-- 插入之前先把表清空（truncate） `goods`
+--
+
+TRUNCATE TABLE `goods`;
+--
 -- 转存表中的数据 `goods`
 --
 
-INSERT INTO `goods` (`id`, `goods_name`, `goods_spec`, `goods_num`, `goods_price`, `goods_cost_price`, `goods_type`, `goods_state`, `goods_stock`, `goods_present`, `img`, `goods_detail`) VALUES
+INSERT IGNORE INTO `goods` (`id`, `goods_name`, `goods_spec`, `goods_num`, `goods_price`, `goods_cost_price`, `goods_type`, `goods_state`, `goods_stock`, `goods_present`, `img`, `goods_detail`) VALUES
 (11, 'Nokia / 诺基亚 X7', ' 暗夜蓝, 4G+64GB', '1', 1699, 1499, '8', 1, 1000, '6.18 英寸全高清屏 / 高通骁龙 710/OIS 光学防抖', '1545902993.jpg', '<p>&nbsp;&nbsp;&nbsp;&nbsp;</p><p><img src=\"https://product-res.baozun.com/prod/88000027/images/n5kZPiEkdS.jpg\"/></p><p><img src=\"https://product-res.baozun.com/prod/88000027/images/pBR3wRRw6M.jpg\"/></p><p><img src=\"https://product-res.baozun.com/prod/88000027/images/GDsTBsraw3.jpg\"/></p><p><img src=\"https://product-res.baozun.com/prod/88000027/images/W3ht2HXFpZ.jpg\"/></p><p><img src=\"https://product-res.baozun.com/prod/88000027/images/fFRyGMe78E.jpg\"/></p><p><img src=\"https://product-res.baozun.com/prod/88000027/images/6si3Ginxr5.jpg\"/></p><p><img src=\"https://product-res.baozun.com/prod/88000027/images/M72j644MPC.jpg\"/></p><p><img src=\"https://product-res.baozun.com/prod/88000027/images/RpscNxjEYj.jpg\"/></p><p><img src=\"https://product-res.baozun.com/prod/88000027/images/NpeRFCWRGa.jpg\"/></p><p><img src=\"https://product-res.baozun.com/prod/88000027/images/heDwFy3KGa.jpg\"/></p><p><img src=\"https://product-res.baozun.com/prod/88000027/images/x4krt4WBFH.jpg\"/></p><p><img src=\"https://product-res.baozun.com/prod/88000027/images/EYYSDCkKj4.jpg\"/></p><p><img src=\"https://product-res.baozun.com/prod/88000027/images/wSpk8nEGkZ.jpg\"/></p><p><img src=\"https://product-res.baozun.com/prod/88000027/images/DhEWS7REmj.jpg\"/></p><p><br/></p>'),
 (14, 'Nokia / 诺基亚 X7', '沁夜黑,4G+64GB', '4', 1699, 1499, '8', 1, 1000, '6.18 英寸全高清屏 / 高通骁龙 710/OIS 光学防抖', '1545917463.jpg', '<p><img src=\"/ueditor/php/upload/image/20181227/1545917258133394.jpg\"/></p><p><img src=\"/ueditor/php/upload/image/20181227/1545917261252553.jpg\"/></p><p><img src=\"/ueditor/php/upload/image/20181227/1545917263172944.jpg\"/></p><p><img src=\"/ueditor/php/upload/image/20181227/1545917268582865.jpg\"/></p><p><img src=\"/ueditor/php/upload/image/20181227/1545917272127851.jpg\"/></p><p><img src=\"/ueditor/php/upload/image/20181227/1545917279601971.jpg\"/></p><p><img src=\"/ueditor/php/upload/image/20181227/1545917282728915.jpg\"/></p><p><img src=\"/ueditor/php/upload/image/20181227/1545917283265807.jpg\"/></p><p><img src=\"/ueditor/php/upload/image/20181227/1545917285947688.jpg\"/></p><p><img src=\"/ueditor/php/upload/image/20181227/1545917286235340.jpg\"/></p><p><img src=\"/ueditor/php/upload/image/20181227/1545917287833224.jpg\"/></p><p><img src=\"/ueditor/php/upload/image/20181227/1545917287466507.jpg\"/></p><p><img src=\"/ueditor/php/upload/image/20181227/1545917289139900.jpg\"/></p><p><img src=\"/ueditor/php/upload/image/20181227/1545917290210210.jpg\"/></p><p><span class=\"description-parameters__title\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; color: rgb(57, 73, 102); font-size: 20px; width: 280px;\"></span></p><p class=\"description-parameters__values\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-top: 0px; margin-bottom: 0px; padding: 0px; font-size: 16px; -webkit-box-flex: 1; flex: 1 1 0%;\"><span class=\"description-parameters__value\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-right: 20px;\"></span></p><p><span class=\"description-parameters__title\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; color: rgb(57, 73, 102); font-size: 20px; width: 280px;\"></span></p><p class=\"description-parameters__values\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-top: 0px; margin-bottom: 0px; padding: 0px; font-size: 16px; -webkit-box-flex: 1; flex: 1 1 0%;\"><span class=\"description-parameters__value\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-right: 20px;\"></span></p><p><span class=\"description-parameters__title\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; color: rgb(57, 73, 102); font-size: 20px; width: 280px;\"></span></p><p class=\"description-parameters__values\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-top: 0px; margin-bottom: 0px; padding: 0px; font-size: 16px; -webkit-box-flex: 1; flex: 1 1 0%;\"><span class=\"description-parameters__value\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-right: 20px;\"></span></p><p><span class=\"description-parameters__title\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; color: rgb(57, 73, 102); font-size: 20px; width: 280px;\"></span></p><p class=\"description-parameters__values\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-top: 0px; margin-bottom: 0px; padding: 0px; font-size: 16px; -webkit-box-flex: 1; flex: 1 1 0%;\"><span class=\"description-parameters__value\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-right: 20px;\"></span></p><p><span class=\"description-parameters__title\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; color: rgb(57, 73, 102); font-size: 20px; width: 280px;\"></span></p><p class=\"description-parameters__values\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-top: 0px; margin-bottom: 0px; padding: 0px; font-size: 16px; -webkit-box-flex: 1; flex: 1 1 0%;\"><span class=\"description-parameters__value\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-right: 20px;\"></span></p><p><span class=\"description-parameters__title\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; color: rgb(57, 73, 102); font-size: 20px; width: 280px;\"></span></p><p class=\"description-parameters__values\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-top: 0px; margin-bottom: 0px; padding: 0px; font-size: 16px; -webkit-box-flex: 1; flex: 1 1 0%;\"><span class=\"description-parameters__value\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-right: 20px;\"></span></p><p><span class=\"description-parameters__title\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; color: rgb(57, 73, 102); font-size: 20px; width: 280px;\"></span></p><p class=\"description-parameters__values\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-top: 0px; margin-bottom: 0px; padding: 0px; font-size: 16px; -webkit-box-flex: 1; flex: 1 1 0%;\"><span class=\"description-parameters__value\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-right: 20px;\"></span></p><p><span class=\"description-parameters__title\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; color: rgb(57, 73, 102); font-size: 20px; width: 280px;\"></span></p><p class=\"description-parameters__values\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-top: 0px; margin-bottom: 0px; padding: 0px; font-size: 16px; -webkit-box-flex: 1; flex: 1 1 0%;\"><span class=\"description-parameters__value\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-right: 20px;\"></span></p><p><span class=\"description-parameters__title\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; color: rgb(57, 73, 102); font-size: 20px; width: 280px;\"></span></p><p class=\"description-parameters__values\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-top: 0px; margin-bottom: 0px; padding: 0px; font-size: 16px; -webkit-box-flex: 1; flex: 1 1 0%;\"><span class=\"description-parameters__value\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-right: 20px;\"></span></p><p><span class=\"description-parameters__title\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; color: rgb(57, 73, 102); font-size: 20px; width: 280px;\"></span></p><p class=\"description-parameters__values\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-top: 0px; margin-bottom: 0px; padding: 0px; font-size: 16px; -webkit-box-flex: 1; flex: 1 1 0%;\"><span class=\"description-parameters__value\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-right: 20px;\"></span></p><p><span class=\"description-parameters__title\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; color: rgb(57, 73, 102); font-size: 20px; width: 280px;\"></span></p><p class=\"description-parameters__values\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-top: 0px; margin-bottom: 0px; padding: 0px; font-size: 16px; -webkit-box-flex: 1; flex: 1 1 0%;\"><span class=\"description-parameters__value\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-right: 20px;\"></span></p><p><span class=\"description-parameters__title\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; color: rgb(57, 73, 102); font-size: 20px; width: 280px;\"></span></p><p class=\"description-parameters__values\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-top: 0px; margin-bottom: 0px; padding: 0px; font-size: 16px; -webkit-box-flex: 1; flex: 1 1 0%;\"><span class=\"description-parameters__value\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-right: 20px;\"></span><span class=\"description-parameters__value\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-right: 20px;\"></span></p><p><span class=\"description-parameters__title\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; color: rgb(57, 73, 102); font-size: 20px; width: 280px;\"></span></p><p class=\"description-parameters__values\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-top: 0px; margin-bottom: 0px; padding: 0px; font-size: 16px; -webkit-box-flex: 1; flex: 1 1 0%;\"><span class=\"description-parameters__value\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-right: 20px;\"></span><span class=\"description-parameters__value\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-right: 20px;\"></span></p><p><br/></p>'),
 (16, 'Nokia/诺基亚 3.1 Plus', '白色,3G+32GB', '3001', 1099, 999, '8', 1, 1000, '6英寸全面屏/3500mAH大电池/双景深镜头 13+5MP', '1545962282.jpg', '<p><img src=\"https://product-res.baozun.com/prod/88000027/images/HeBWKA7wCW.jpg\"/></p><p><img src=\"https://product-res.baozun.com/prod/88000027/images/pjm66s26JN.jpg\"/></p><p><img src=\"https://product-res.baozun.com/prod/88000027/images/ZM65jTFs2B.jpg\"/></p><p><img src=\"https://product-res.baozun.com/prod/88000027/images/DARtQJ2DMi.jpg\"/></p><p><img src=\"https://product-res.baozun.com/prod/88000027/images/M5i4aNEkSD.jpg\"/></p><p><img src=\"https://product-res.baozun.com/prod/88000027/images/zcyRMYppN6.jpg\"/></p><p><img src=\"https://product-res.baozun.com/prod/88000027/images/5K58wjDdYW.jpg\"/></p><p><img src=\"https://product-res.baozun.com/prod/88000027/images/823R5Q567S.jpg\"/></p><p><img src=\"https://product-res.baozun.com/prod/88000027/images/2AwsN6Fpyt.png\"/></p><p><img src=\"https://product-res.baozun.com/prod/88000027/images/JTBCcZTGrY.jpg\"/></p><p><img src=\"https://product-res.baozun.com/prod/88000027/images/yeTXJppciZ.jpg\"/></p><p><img src=\"https://product-res.baozun.com/prod/88000027/images/DhEWS7REmj.jpg\"/></p><p><span class=\"description-parameters__title\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; color: rgb(57, 73, 102); font-size: 20px; width: 280px;\"></span></p><p class=\"description-parameters__values\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-top: 0px; margin-bottom: 0px; padding: 0px; font-size: 16px; -webkit-box-flex: 1; flex: 1 1 0%;\"><span class=\"description-parameters__value\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-right: 20px;\"></span></p><p><span class=\"description-parameters__title\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; color: rgb(57, 73, 102); font-size: 20px; width: 280px;\"></span></p><p class=\"description-parameters__values\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-top: 0px; margin-bottom: 0px; padding: 0px; font-size: 16px; -webkit-box-flex: 1; flex: 1 1 0%;\"><span class=\"description-parameters__value\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-right: 20px;\"></span></p><p><span class=\"description-parameters__title\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; color: rgb(57, 73, 102); font-size: 20px; width: 280px;\"></span></p><p class=\"description-parameters__values\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-top: 0px; margin-bottom: 0px; padding: 0px; font-size: 16px; -webkit-box-flex: 1; flex: 1 1 0%;\"><span class=\"description-parameters__value\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-right: 20px;\"></span></p><p><span class=\"description-parameters__title\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; color: rgb(57, 73, 102); font-size: 20px; width: 280px;\"></span></p><p class=\"description-parameters__values\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-top: 0px; margin-bottom: 0px; padding: 0px; font-size: 16px; -webkit-box-flex: 1; flex: 1 1 0%;\"><span class=\"description-parameters__value\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-right: 20px;\"></span></p><p><span class=\"description-parameters__title\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; color: rgb(57, 73, 102); font-size: 20px; width: 280px;\"></span></p><p class=\"description-parameters__values\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-top: 0px; margin-bottom: 0px; padding: 0px; font-size: 16px; -webkit-box-flex: 1; flex: 1 1 0%;\"><span class=\"description-parameters__value\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-right: 20px;\"></span></p><p><span class=\"description-parameters__title\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; color: rgb(57, 73, 102); font-size: 20px; width: 280px;\"></span></p><p class=\"description-parameters__values\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-top: 0px; margin-bottom: 0px; padding: 0px; font-size: 16px; -webkit-box-flex: 1; flex: 1 1 0%;\"><span class=\"description-parameters__value\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-right: 20px;\"></span></p><p><span class=\"description-parameters__title\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; color: rgb(57, 73, 102); font-size: 20px; width: 280px;\"></span></p><p class=\"description-parameters__values\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-top: 0px; margin-bottom: 0px; padding: 0px; font-size: 16px; -webkit-box-flex: 1; flex: 1 1 0%;\"><span class=\"description-parameters__value\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-right: 20px;\"></span></p><p><span class=\"description-parameters__title\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; color: rgb(57, 73, 102); font-size: 20px; width: 280px;\"></span></p><p class=\"description-parameters__values\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-top: 0px; margin-bottom: 0px; padding: 0px; font-size: 16px; -webkit-box-flex: 1; flex: 1 1 0%;\"><span class=\"description-parameters__value\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-right: 20px;\"></span></p><p><span class=\"description-parameters__title\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; color: rgb(57, 73, 102); font-size: 20px; width: 280px;\"></span></p><p class=\"description-parameters__values\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-top: 0px; margin-bottom: 0px; padding: 0px; font-size: 16px; -webkit-box-flex: 1; flex: 1 1 0%;\"><span class=\"description-parameters__value\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-right: 20px;\"></span></p><p><span class=\"description-parameters__title\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; color: rgb(57, 73, 102); font-size: 20px; width: 280px;\"></span></p><p class=\"description-parameters__values\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-top: 0px; margin-bottom: 0px; padding: 0px; font-size: 16px; -webkit-box-flex: 1; flex: 1 1 0%;\"><span class=\"description-parameters__value\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-right: 20px;\"></span></p><p><span class=\"description-parameters__title\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; color: rgb(57, 73, 102); font-size: 20px; width: 280px;\"></span></p><p class=\"description-parameters__values\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-top: 0px; margin-bottom: 0px; padding: 0px; font-size: 16px; -webkit-box-flex: 1; flex: 1 1 0%;\"><span class=\"description-parameters__value\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-right: 20px;\"></span></p><p><span class=\"description-parameters__title\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; color: rgb(57, 73, 102); font-size: 20px; width: 280px;\"></span></p><p class=\"description-parameters__values\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-top: 0px; margin-bottom: 0px; padding: 0px; font-size: 16px; -webkit-box-flex: 1; flex: 1 1 0%;\"><span class=\"description-parameters__value\" style=\"-webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-sizing: border-box; margin-right: 20px;\"></span></p><p><br/></p>'),
@@ -210,7 +183,7 @@ INSERT INTO `goods` (`id`, `goods_name`, `goods_spec`, `goods_num`, `goods_price
 --
 -- 表的结构 `goods_type`
 --
--- 创建时间： 2019-01-02 00:44:33
+-- 创建时间： 2020-03-31 09:39:51
 --
 
 DROP TABLE IF EXISTS `goods_type`;
@@ -226,10 +199,15 @@ CREATE TABLE IF NOT EXISTS `goods_type` (
 --
 
 --
+-- 插入之前先把表清空（truncate） `goods_type`
+--
+
+TRUNCATE TABLE `goods_type`;
+--
 -- 转存表中的数据 `goods_type`
 --
 
-INSERT INTO `goods_type` (`id`, `type_name`, `type_fid`) VALUES
+INSERT IGNORE INTO `goods_type` (`id`, `type_name`, `type_fid`) VALUES
 (1, '手机', 0),
 (8, '智能手机', 1),
 (10, '经典手机', 1),
@@ -240,7 +218,7 @@ INSERT INTO `goods_type` (`id`, `type_name`, `type_fid`) VALUES
 --
 -- 表的结构 `orders`
 --
--- 创建时间： 2019-01-02 00:44:33
+-- 创建时间： 2020-03-31 09:39:51
 --
 
 DROP TABLE IF EXISTS `orders`;
@@ -250,29 +228,23 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `user_id` int(11) NOT NULL COMMENT '用户id',
   `order_num` int(11) NOT NULL COMMENT '订单编号',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- 表的关系 `orders`:
 --
 
 --
--- 转存表中的数据 `orders`
+-- 插入之前先把表清空（truncate） `orders`
 --
 
-INSERT INTO `orders` (`id`, `order_state`, `user_id`, `order_num`) VALUES
-(43, 0, 4, 1546952847),
-(44, 0, 4, 1546994312),
-(45, 0, 4, 1546994322),
-(46, 0, 4, 1547428174),
-(47, 0, 4, 1547428443);
-
+TRUNCATE TABLE `orders`;
 -- --------------------------------------------------------
 
 --
 -- 表的结构 `orders_detail`
 --
--- 创建时间： 2019-01-02 00:44:33
+-- 创建时间： 2020-03-31 09:39:51
 --
 
 DROP TABLE IF EXISTS `orders_detail`;
@@ -287,29 +259,23 @@ CREATE TABLE IF NOT EXISTS `orders_detail` (
   `img` varchar(40) COLLATE utf8_bin NOT NULL COMMENT '图片',
   `goods_name` varchar(50) COLLATE utf8_bin NOT NULL COMMENT '商品名称',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=92 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- 表的关系 `orders_detail`:
 --
 
 --
--- 转存表中的数据 `orders_detail`
+-- 插入之前先把表清空（truncate） `orders_detail`
 --
 
-INSERT INTO `orders_detail` (`id`, `goods_id`, `goods_spec`, `goods_num`, `address_id`, `orders_id`, `goods_price`, `img`, `goods_name`) VALUES
-(87, 19, '波罗的海蓝, 3G+32GB', 4, 14, 43, 999, '1545966554.jpg', 'Nokia / 诺基亚 X5'),
-(88, 16, '白色, 3G+32GB', 3, 7, 44, 1099, '1545962282.jpg', 'Nokia / 诺基亚 3.1 Plus'),
-(89, 20, '黑色, 6G+128GB', 2, 14, 45, 4699, '1545966725.jpg', 'Nokia / 诺基亚 8 Sirocco'),
-(90, 21, '黑色,4G+64GB', 4, 19, 46, 1899, '1545966955.jpg', 'Nokia/诺基亚 7 Plus'),
-(91, 11, '暗夜蓝, 4G+64GB', 4, 7, 47, 1699, '1545902993.jpg', 'Nokia / 诺基亚 X7');
-
+TRUNCATE TABLE `orders_detail`;
 -- --------------------------------------------------------
 
 --
 -- 表的结构 `province`
 --
--- 创建时间： 2019-01-02 00:44:34
+-- 创建时间： 2020-03-31 09:39:51
 --
 
 DROP TABLE IF EXISTS `province`;
@@ -317,37 +283,23 @@ CREATE TABLE IF NOT EXISTS `province` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '省份id',
   `province_name` varchar(50) COLLATE utf8_bin NOT NULL COMMENT '省份名称',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- 表的关系 `province`:
 --
 
 --
--- 转存表中的数据 `province`
+-- 插入之前先把表清空（truncate） `province`
 --
 
-INSERT INTO `province` (`id`, `province_name`) VALUES
-(7, '陕西'),
-(8, '陕西'),
-(9, '北京'),
-(10, '北京'),
-(11, '北京'),
-(12, '北京'),
-(13, '北京'),
-(14, '贵州'),
-(15, '北京'),
-(16, '北京'),
-(17, '甘肃'),
-(18, '北京'),
-(19, '青海');
-
+TRUNCATE TABLE `province`;
 -- --------------------------------------------------------
 
 --
 -- 表的结构 `shopping_car`
 --
--- 创建时间： 2019-01-02 00:44:34
+-- 创建时间： 2020-03-31 09:39:51
 --
 
 DROP TABLE IF EXISTS `shopping_car`;
@@ -361,27 +313,23 @@ CREATE TABLE IF NOT EXISTS `shopping_car` (
   `goods_name` varchar(40) COLLATE utf8_bin NOT NULL COMMENT '商品名称',
   `img` varchar(40) COLLATE utf8_bin NOT NULL COMMENT '商品图',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- 表的关系 `shopping_car`:
 --
 
 --
--- 转存表中的数据 `shopping_car`
+-- 插入之前先把表清空（truncate） `shopping_car`
 --
 
-INSERT INTO `shopping_car` (`id`, `user_id`, `goods_spec`, `goods_id`, `goods_num`, `goods_price`, `goods_name`, `img`) VALUES
-(36, 11, '黑色,6G+128GB', 20, 1, 4699, 'Nokia/诺基亚 8 Sirocco', '1545966725.jpg'),
-(37, 12, '沁夜黑,4G+64GB', 14, 2, 1699, 'Nokia / 诺基亚 X7', '1545917463.jpg'),
-(40, 4, '黑色,4G+64GB', 21, 3, 1899, 'Nokia/诺基亚 7 Plus', '1545966955.jpg');
-
+TRUNCATE TABLE `shopping_car`;
 -- --------------------------------------------------------
 
 --
 -- 表的结构 `user`
 --
--- 创建时间： 2019-01-02 00:44:34
+-- 创建时间： 2020-03-31 09:39:51
 --
 
 DROP TABLE IF EXISTS `user`;
@@ -398,21 +346,23 @@ CREATE TABLE IF NOT EXISTS `user` (
 --
 
 --
+-- 插入之前先把表清空（truncate） `user`
+--
+
+TRUNCATE TABLE `user`;
+--
 -- 转存表中的数据 `user`
 --
 
-INSERT INTO `user` (`id`, `phone`, `password`, `user_state`) VALUES
-(4, '13111111111', 'cd60127f03ca83b35a7df445bfe6648e', '1'),
-(10, '15111111111', 'cd60127f03ca83b35a7df445bfe6648e', '1'),
-(11, '13511111111', 'cd60127f03ca83b35a7df445bfe6648e', '1'),
-(12, '13911111111', 'cd60127f03ca83b35a7df445bfe6648e', '1');
+INSERT IGNORE INTO `user` (`id`, `phone`, `password`, `user_state`) VALUES
+(4, '13111111111', 'cd60127f03ca83b35a7df445bfe6648e', '1');
 
 -- --------------------------------------------------------
 
 --
 -- 表的结构 `user_info`
 --
--- 创建时间： 2019-01-02 00:44:34
+-- 创建时间： 2020-03-31 09:39:51
 --
 
 DROP TABLE IF EXISTS `user_info`;
@@ -430,14 +380,16 @@ CREATE TABLE IF NOT EXISTS `user_info` (
 --
 
 --
+-- 插入之前先把表清空（truncate） `user_info`
+--
+
+TRUNCATE TABLE `user_info`;
+--
 -- 转存表中的数据 `user_info`
 --
 
-INSERT INTO `user_info` (`infoid`, `user_id`, `sex`, `email`, `name`) VALUES
-(4, '4', '男', '1234654@qq.com', '嗯嗯'),
-(5, '10', '男', '92435678765@qq.com', '陈江波'),
-(6, '11', '男', '1234578987654@qq.com', 'zwzw'),
-(7, '12', '男', '123443300@qq.com', '哈哈');
+INSERT IGNORE INTO `user_info` (`infoid`, `user_id`, `sex`, `email`, `name`) VALUES
+(4, '4', '男', '1234654@qq.com', '撕葱');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
